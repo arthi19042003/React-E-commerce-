@@ -1,13 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
-import { FaShoppingCart, FaUser, FaSignOutAlt } from 'react-icons/fa';
+import {
+  FaShoppingCart,
+  FaUser,
+  FaSignOutAlt,
+  FaSearch
+} from 'react-icons/fa';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, isAuthenticated, isAdmin, logout } = useContext(AuthContext);
   const { cartItemsCount } = useContext(CartContext);
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -15,47 +21,99 @@ const Navbar = () => {
     navigate('/');
   };
 
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    navigate('/products', { state: { search } });
+    setSearch('');
+  };
+
   return (
-    <nav className="navbar">
-      <div className="container">
-        <Link to="/" className="navbar-brand">
+    <nav className="ec-navbar">
+      <div className="ec-navbar__container">
+
+        {/* ========= LOGO ========= */}
+        <Link to="/" className="ec-navbar__brand">
           <h2>E-Store</h2>
         </Link>
 
-        <div className="navbar-menu">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/products" className="nav-link">Products</Link>
-          
-          {isAuthenticated ? (
+        {/* ========= SEARCH ========= */}
+        <div className="ec-navbar__search">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          />
+          <button onClick={handleSearch}>
+            <FaSearch />
+          </button>
+        </div>
+
+        {/* ========= MENU ========= */}
+        <div className="ec-navbar__menu">
+          <Link to="/" className="ec-navbar__link">Home</Link>
+          <Link to="/products" className="ec-navbar__link">Products</Link>
+
+          {/* ===== USER LINKS ===== */}
+          {isAuthenticated && !isAdmin && (
             <>
-              <Link to="/cart" className="nav-link cart-link">
+              <Link to="/cart" className="ec-navbar__cart">
                 <FaShoppingCart />
                 {cartItemsCount > 0 && (
-                  <span className="cart-badge">{cartItemsCount}</span>
+                  <span className="ec-navbar__cart-badge">
+                    {cartItemsCount}
+                  </span>
                 )}
               </Link>
-              
-              <Link to="/orders" className="nav-link">My Orders</Link>
-              
-              {isAdmin && (
-                <Link to="/admin" className="nav-link admin-link">Admin</Link>
-              )}
-              
-              <div className="user-menu">
-                <FaUser className="user-icon" />
-                <span>{user?.name}</span>
-                <div className="dropdown">
-                  <Link to="/profile" className="dropdown-item">Profile</Link>
-                  <button onClick={handleLogout} className="dropdown-item">
-                    <FaSignOutAlt /> Logout
-                  </button>
-                </div>
-              </div>
+
+              <Link to="/orders" className="ec-navbar__link">
+                My Orders
+              </Link>
             </>
+          )}
+
+          {/* ===== ADMIN ===== */}
+          {isAuthenticated && isAdmin && (
+            <Link to="/admin" className="ec-navbar__btn-admin">
+              Admin Panel
+            </Link>
+          )}
+
+          {/* ===== AUTH ===== */}
+          {isAuthenticated ? (
+            <div className="ec-navbar__user">
+              <div className="ec-navbar__user-info">
+                <FaUser />
+                <span className="ec-navbar__user-name">
+                  {user?.name}
+                </span>
+              </div>
+
+              <div className="ec-navbar__dropdown">
+                <Link
+                  to="/profile"
+                  className="ec-navbar__dropdown-item"
+                >
+                  👤 Profile
+                </Link>
+
+                <button
+                  onClick={handleLogout}
+                  className="ec-navbar__dropdown-item ec-navbar__logout"
+                >
+                  <FaSignOutAlt /> Logout
+                </button>
+              </div>
+            </div>
           ) : (
             <>
-              <Link to="/login" className="nav-link">Login</Link>
-              <Link to="/register" className="btn btn-primary">Sign Up</Link>
+              <Link to="/login" className="ec-navbar__btn-login">
+                Login
+              </Link>
+              <Link to="/register" className="ec-navbar__btn-register">
+                Sign Up
+              </Link>
             </>
           )}
         </div>

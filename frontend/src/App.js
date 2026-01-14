@@ -1,16 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-// Fixed Imports (Removed the starting '/')
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 
 import Navbar from './components/Navbar';
-import PrivateRoute from './components/PrivateRoute';
-import AdminRoute from './components/AdminRoute';
 
+// Route Guards
+import PrivateRoute from './components/PrivateRoute';
+import UserRoute from './routes/UserRoute';
+import AdminRoute from './routes/AdminRoute';
+
+// Pages
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
@@ -30,25 +32,77 @@ function App() {
     <Router>
       <AuthProvider>
         <CartProvider>
-          <div className="App">
+          <div className="ec-app">
             <Navbar />
-            <main className="main-content">
+
+            <main className="ec-main-content">
               <Routes>
+                {/* PUBLIC */}
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:id" element={<ProductDetail />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                
-                <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
-                <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-                <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
-                <Route path="/orders/:id" element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
-                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                
-                <Route path="/admin/*" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+
+                {/* USER ONLY */}
+                <Route
+                  path="/cart"
+                  element={
+                    <UserRoute>
+                      <Cart />
+                    </UserRoute>
+                  }
+                />
+
+                <Route
+                  path="/checkout"
+                  element={
+                    <UserRoute>
+                      <Checkout />
+                    </UserRoute>
+                  }
+                />
+
+                <Route
+                  path="/orders"
+                  element={
+                    <UserRoute>
+                      <Orders />
+                    </UserRoute>
+                  }
+                />
+
+                <Route
+                  path="/orders/:id"
+                  element={
+                    <UserRoute>
+                      <OrderDetail />
+                    </UserRoute>
+                  }
+                />
+
+                {/* ANY LOGGED IN USER */}
+                <Route
+                  path="/profile"
+                  element={
+                    <PrivateRoute>
+                      <Profile />
+                    </PrivateRoute>
+                  }
+                />
+
+                {/* ADMIN ONLY */}
+                <Route
+                  path="/admin/*"
+                  element={
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
+                  }
+                />
               </Routes>
             </main>
+
             <ToastContainer position="top-right" autoClose={3000} />
           </div>
         </CartProvider>

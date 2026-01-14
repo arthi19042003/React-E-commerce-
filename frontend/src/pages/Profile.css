@@ -1,0 +1,66 @@
+/* ============================= */
+/* PROFILE PAGE – UNIQUE CSS     */
+/* ============================= */
+
+.ec-profile-page .profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.ec-profile-page .profile-info {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  height: fit-content;
+}
+
+.ec-profile-page .profile-info h3 {
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.75rem;
+}
+
+.ec-profile-page .profile-info p {
+  margin: 1rem 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.ec-profile-page .profile-info strong {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.ec-profile-page .profile-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.ec-profile-page .profile-form h3 {
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.75rem;
+}
+
+.ec-profile-page .profile-form h4 {
+  margin: 1.5rem 0 1rem 0;
+  color: #34495e;
+  font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .ec-profile-page .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

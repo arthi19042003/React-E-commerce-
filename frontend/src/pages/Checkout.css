@@ -1,0 +1,172 @@
+/* ===============================
+   CHECKOUT PAGE (Scoped Styles)
+   =============================== */
+
+.ec-checkout-page {
+  padding: 3rem 1rem 5rem;
+  background: #f7f8fa;
+}
+
+/* Page Title */
+.ec-checkout-page .page-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: #2c3e50;
+}
+
+/* Grid Layout */
+.ec-checkout-page .checkout-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* Card Base */
+.ec-checkout-page .card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* ===============================
+   FORM
+   =============================== */
+
+.ec-checkout-page .checkout-form h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.ec-checkout-page .form-group {
+  margin-bottom: 1.2rem;
+}
+
+.ec-checkout-page label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.ec-checkout-page .form-control {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 0.95rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.ec-checkout-page .form-control:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52,152,219,0.15);
+}
+
+/* Row */
+.ec-checkout-page .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ===============================
+   PAYMENT
+   =============================== */
+
+.ec-checkout-page .payment-methods {
+  margin-bottom: 1.5rem;
+}
+
+.ec-checkout-page .radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* ===============================
+   BUTTON
+   =============================== */
+
+.ec-checkout-page .btn-success {
+  background: linear-gradient(135deg, #27ae60, #1e8449);
+  border: none;
+  color: white;
+  padding: 0.9rem;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ec-checkout-page .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(39,174,96,0.35);
+}
+
+.ec-checkout-page .btn-block {
+  width: 100%;
+}
+
+/* ===============================
+   ORDER SUMMARY
+   =============================== */
+
+.ec-checkout-page .order-summary h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.ec-checkout-page .summary-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  margin-bottom: 0.6rem;
+  color: #555;
+}
+
+.ec-checkout-page .summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.ec-checkout-page .summary-row.total {
+  border-top: 1px solid #e5e5e5;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  font-size: 1.15rem;
+  color: #111;
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+
+@media (max-width: 900px) {
+  .ec-checkout-page .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .ec-checkout-page .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ec-checkout-page .card {
+    padding: 1.5rem;
+  }
+}

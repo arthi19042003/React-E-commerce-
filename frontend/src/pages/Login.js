@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import './Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const result = await login({ email, password });
     if (result.success) {
       navigate('/');
@@ -17,35 +19,46 @@ const Login = () => {
   };
 
   return (
-    <div className="container" style={{ maxWidth: '400px', marginTop: '2rem' }}>
-      <div className="card">
-        <h2 className="text-center">Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email</label>
-            <input 
-              type="email" 
-              className="form-control" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input 
-              type="password" 
-              className="form-control" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
-            />
-          </div>
-          <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Login</button>
-        </form>
-        <p className="mt-2 text-center">
-          Don't have an account? <Link to="/register">Register</Link>
-        </p>
+    /* ✅ UNIQUE PAGE SCOPE */
+    <div className="ec-login-page">
+      <div className="ec-login-container">
+        <div className="ec-login-card">
+          <h2 className="ec-login-title">Welcome Back!</h2>
+
+          <form onSubmit={handleSubmit} className="ec-login-form">
+            <div className="ec-login-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                className="ec-login-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div className="ec-login-group">
+              <label>Password</label>
+              <input
+                type="password"
+                className="ec-login-input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <button type="submit" className="ec-login-btn">
+              Login
+            </button>
+          </form>
+
+          <p className="ec-login-link">
+            Don't have an account? <Link to="/register">Sign up here</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

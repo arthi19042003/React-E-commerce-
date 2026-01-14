@@ -1,0 +1,121 @@
+/* ================================ */
+/* REGISTER PAGE – UNIQUE CSS ONLY  */
+/* ================================ */
+
+.ec-register-page .auth-page {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6f8;
+}
+
+.ec-register-page .auth-container {
+  width: 100%;
+  max-width: 480px;
+  padding: 20px;
+}
+
+.ec-register-page .auth-card {
+  background: #ffffff;
+  padding: 32px 36px;
+  border-radius: 14px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* Heading */
+.ec-register-page .auth-card h2 {
+  text-align: center;
+  margin-bottom: 26px;
+  color: #2c3e50;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* Form */
+.ec-register-page .auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.ec-register-page .form-group {
+  margin-bottom: 18px;
+}
+
+.ec-register-page .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.ec-register-page .form-control {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1.8px solid #dcdcdc;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.ec-register-page .form-control:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* Password hint */
+.ec-register-page .password-hint {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 4px;
+}
+
+/* Button */
+.ec-register-page .btn-auth {
+  margin-top: 10px;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ec-register-page .btn-auth:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(118, 75, 162, 0.4);
+}
+
+/* Bottom link */
+.ec-register-page .auth-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.ec-register-page .auth-link a {
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ec-register-page .auth-link a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .ec-register-page .auth-card {
+    padding: 26px 22px;
+  }
+
+  .ec-register-page .auth-card h2 {
+    font-size: 22px;
+  }
+}

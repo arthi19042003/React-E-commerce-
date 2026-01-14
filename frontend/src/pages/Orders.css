@@ -1,0 +1,156 @@
+/* ===============================
+   ORDERS PAGE (EC)
+   =============================== */
+
+.ec-orders-page {
+  padding: 3rem 1rem 5rem;
+}
+
+/* Title */
+.ec-orders-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  color: #2c3e50;
+}
+
+/* Empty State */
+.ec-orders-empty {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.ec-orders-empty p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.ec-orders-btn {
+  display: inline-block;
+  padding: 0.75rem 1.6rem;
+  border-radius: 8px;
+  background: #3498db;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ec-orders-btn:hover {
+  background: #2e86c1;
+}
+
+/* Orders List */
+.ec-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* Order Card */
+.ec-orders-card {
+  background: #ffffff;
+  padding: 1.6rem;
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.ec-orders-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.15);
+  border-color: #3498db;
+}
+
+/* Header */
+.ec-orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 1rem;
+}
+
+.ec-orders-header strong {
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+/* Status */
+.ec-orders-status {
+  margin-left: 0.8rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Status Colors */
+.ec-status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.ec-status-processing {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.ec-status-shipped {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.ec-status-delivered {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.ec-status-cancelled {
+  background: #fdecea;
+  color: #c62828;
+}
+
+/* Date */
+.ec-orders-date {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+/* Items */
+.ec-orders-items {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Total */
+.ec-orders-total {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #27ae60;
+}
+
+/* Loading */
+.ec-orders-loading {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .ec-orders-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+}

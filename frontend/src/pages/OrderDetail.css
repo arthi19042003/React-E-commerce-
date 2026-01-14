@@ -1,0 +1,166 @@
+/* ===============================
+   ORDER DETAIL PAGE (EC)
+   =============================== */
+
+.ec-order-page {
+  padding: 3rem 1rem 5rem;
+}
+
+/* Title */
+.ec-order-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  color: #2c3e50;
+}
+
+/* Grid */
+.ec-order-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Card */
+.ec-order-card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+/* Headings */
+.ec-order-card h3 {
+  margin-bottom: 1.4rem;
+  font-size: 1.3rem;
+  color: #2c3e50;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.6rem;
+}
+
+/* Status Badge */
+.ec-order-status {
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.ec-status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.ec-status-processing {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.ec-status-completed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.ec-status-cancelled {
+  background: #fdecea;
+  color: #c62828;
+}
+
+/* Cancel Button */
+.ec-order-cancel-btn {
+  margin-top: 1.2rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  border: none;
+  background: #e74c3c;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ec-order-cancel-btn:hover {
+  background: #c0392b;
+}
+
+/* Items */
+.ec-order-items {
+  margin-top: 2.5rem;
+}
+
+.ec-order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ec-order-item:last-child {
+  border-bottom: none;
+}
+
+.ec-order-item-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.ec-order-item-info img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.ec-order-item-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #27ae60;
+}
+
+/* Totals */
+.ec-order-totals {
+  margin-top: 2rem;
+  border-top: 2px solid #e0e0e0;
+  padding-top: 1.5rem;
+}
+
+.ec-order-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  color: #555;
+}
+
+.ec-grand-total {
+  font-size: 1.3rem;
+}
+
+.ec-grand-total strong {
+  color: #27ae60;
+}
+
+/* Loading/Error */
+.ec-order-loading,
+.ec-order-error {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ec-order-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ec-order-item {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .ec-order-item-price {
+    align-self: flex-end;
+  }
+}
