@@ -34,102 +34,86 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard">
-      <div className="admin-sidebar">
-        <div className="admin-logo">
+    <div className="db-wrapper">
+      {/* Sidebar */}
+      <div className="db-sidebar">
+        <div className="db-logo">
           <h2>Admin Panel</h2>
         </div>
-        <nav className="admin-nav">
-          <Link to="/admin" className="admin-nav-link">
-            📊 Dashboard
-          </Link>
-          <Link to="/admin/products" className="admin-nav-link">
-            📦 Manage Products
-          </Link>
-          <Link to="/admin/categories" className="admin-nav-link">
-            🏷️ Manage Categories
-          </Link>
-          <Link to="/admin/orders" className="admin-nav-link">
-            🛒 Manage Orders
-          </Link>
-          <Link to="/admin/users" className="admin-nav-link">
-            👥 Manage Users
-          </Link>
-          <Link to="/" className="admin-nav-link back-to-site">
-            ← Back to Site
-          </Link>
+        <nav className="db-nav">
+          <Link to="/admin" className="db-nav-link">📊 Dashboard</Link>
+          <Link to="/admin/products" className="db-nav-link">📦 Manage Products</Link>
+          <Link to="/admin/categories" className="db-nav-link">🏷️ Manage Categories</Link>
+          <Link to="/admin/orders" className="db-nav-link">🛒 Manage Orders</Link>
+          <Link to="/admin/users" className="db-nav-link">👥 Manage Users</Link>
+          <Link to="/" className="db-nav-link db-back">← Back to Site</Link>
         </nav>
       </div>
 
-      <div className="admin-content">
+      {/* Main Content Area */}
+      <div className="db-content">
         <Routes>
+          {/* Dashboard Home (Stats) */}
           <Route path="/" element={
-            <div className="dashboard-home">
-              <h1 className="admin-title">Dashboard Overview</h1>
+            <div className="db-home">
+              <h1 className="db-title">Dashboard Overview</h1>
               
               {loading ? (
-                <div className="loading">Loading statistics...</div>
+                <div className="db-loading">Loading statistics...</div>
               ) : (
-                <div className="stats-grid">
-                  <div className="stat-card">
-                    <div className="stat-icon orders">📦</div>
-                    <div className="stat-details">
+                <div className="db-stats-grid">
+                  <div className="db-stat-card">
+                    <div className="db-stat-icon db-icon-orders">📦</div>
+                    <div className="db-stat-details">
                       <h3>Total Orders</h3>
-                      <p className="stat-value">{stats.orders.totalOrders || 0}</p>
+                      <p className="db-stat-value">{stats.orders.totalOrders || 0}</p>
                     </div>
                   </div>
 
-                  <div className="stat-card">
-                    <div className="stat-icon pending">⏳</div>
-                    <div className="stat-details">
+                  <div className="db-stat-card">
+                    <div className="db-stat-icon db-icon-pending">⏳</div>
+                    <div className="db-stat-details">
                       <h3>Pending Orders</h3>
-                      <p className="stat-value">{stats.orders.pendingOrders || 0}</p>
+                      <p className="db-stat-value">{stats.orders.pendingOrders || 0}</p>
                     </div>
                   </div>
 
-                  <div className="stat-card">
-                    <div className="stat-icon revenue">💰</div>
-                    <div className="stat-details">
+                  <div className="db-stat-card">
+                    <div className="db-stat-icon db-icon-revenue">💰</div>
+                    <div className="db-stat-details">
                       <h3>Total Revenue</h3>
-                      <p className="stat-value">₹{stats.orders.totalRevenue || 0}</p>
+                      <p className="db-stat-value">₹{stats.orders.totalRevenue || 0}</p>
                     </div>
                   </div>
 
-                  <div className="stat-card">
-                    <div className="stat-icon users">👥</div>
-                    <div className="stat-details">
+                  <div className="db-stat-card">
+                    <div className="db-stat-icon db-icon-users">👥</div>
+                    <div className="db-stat-details">
                       <h3>Total Users</h3>
-                      <p className="stat-value">{stats.users.totalUsers || 0}</p>
+                      <p className="db-stat-value">{stats.users.totalUsers || 0}</p>
                     </div>
                   </div>
                 </div>
               )}
 
-              <div className="quick-actions">
+              <div className="db-quick-actions">
                 <h2>Quick Actions</h2>
-                <div className="action-buttons">
-                  <button 
-                    className="action-btn primary"
-                    onClick={() => navigate('/admin/products')}
-                  >
-                    ➕ Add New Product
+                <div className="db-action-buttons">
+                  <button className="db-action-btn db-btn-primary" onClick={() => navigate('/admin/products')}>
+                    ➕ Add Product
                   </button>
-                  <button 
-                    className="action-btn secondary"
-                    onClick={() => navigate('/admin/categories')}
-                  >
-                    ➕ Add New Category
+                  <button className="db-action-btn db-btn-secondary" onClick={() => navigate('/admin/categories')}>
+                    ➕ Add Category
                   </button>
-                  <button 
-                    className="action-btn info"
-                    onClick={() => navigate('/admin/orders')}
-                  >
-                    📋 View All Orders
+                  <button className="db-action-btn db-btn-info" onClick={() => navigate('/admin/orders')}>
+                    📋 View Orders
                   </button>
                 </div>
               </div>
             </div>
           } />
+
+          {/* Sub Routes */}
           <Route path="/products" element={<ManageProducts />} />
           <Route path="/categories" element={<ManageCategories />} />
           <Route path="/orders" element={<ManageOrders />} />

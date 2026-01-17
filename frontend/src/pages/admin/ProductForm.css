@@ -1,0 +1,11 @@
+/* Unique Styles for Product Form Page */
+.pf-container { padding: 40px; background: #f8f9fa; min-height: 100vh; display: flex; justify-content: center; }
+.pf-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); width: 100%; max-width: 600px; height: fit-content; }
+.pf-card h2 { margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
+.pf-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+.pf-btn { width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.pf-btn:hover { background: #2980b9; }
+
+.pf-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 10000; }
+.pf-popup { background: white; padding: 40px; border-radius: 16px; text-align: center; }
+.pf-icon { width: 60px; height: 60px; background: #27ae60; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; margin: 0 auto 15px; }

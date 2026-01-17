@@ -28,16 +28,16 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="ec-navbar">
-      <div className="ec-navbar__container">
+    <nav className="navbar">
+      <div className="container">
 
-        {/* ========= LOGO ========= */}
-        <Link to="/" className="ec-navbar__brand">
+        {/* LOGO */}
+        <Link to="/" className="navbar-brand">
           <h2>E-Store</h2>
         </Link>
 
-        {/* ========= SEARCH ========= */}
-        <div className="ec-navbar__search">
+        {/* 🔍 SEARCH BAR */}
+        <div className="navbar-search">
           <input
             type="text"
             placeholder="Search products..."
@@ -50,57 +50,49 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* ========= MENU ========= */}
-        <div className="ec-navbar__menu">
-          <Link to="/" className="ec-navbar__link">Home</Link>
-          <Link to="/products" className="ec-navbar__link">Products</Link>
+        {/* NAV LINKS */}
+        <div className="navbar-menu">
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/products" className="nav-link">Products</Link>
 
-          {/* ===== USER LINKS ===== */}
+          {/* USER NAV */}
           {isAuthenticated && !isAdmin && (
             <>
-              <Link to="/cart" className="ec-navbar__cart">
+              <Link to="/cart" className="nav-link cart-link">
                 <FaShoppingCart />
                 {cartItemsCount > 0 && (
-                  <span className="ec-navbar__cart-badge">
-                    {cartItemsCount}
-                  </span>
+                  <span className="cart-badge">{cartItemsCount}</span>
                 )}
               </Link>
 
-              <Link to="/orders" className="ec-navbar__link">
+              <Link to="/orders" className="nav-link">
                 My Orders
               </Link>
             </>
           )}
 
-          {/* ===== ADMIN ===== */}
+          {/* ADMIN NAV */}
           {isAuthenticated && isAdmin && (
-            <Link to="/admin" className="ec-navbar__btn-admin">
+            <Link to="/admin" className="btn btn-admin">
               Admin Panel
             </Link>
           )}
 
-          {/* ===== AUTH ===== */}
+          {/* AUTH */}
           {isAuthenticated ? (
-            <div className="ec-navbar__user">
-              <div className="ec-navbar__user-info">
-                <FaUser />
-                <span className="ec-navbar__user-name">
-                  {user?.name}
-                </span>
+            <div className="user-menu">
+              <div className="user-info">
+                <FaUser className="user-icon" />
+                <span className="user-name">{user?.name}</span>
               </div>
 
-              <div className="ec-navbar__dropdown">
-                <Link
-                  to="/profile"
-                  className="ec-navbar__dropdown-item"
-                >
+              <div className="dropdown">
+                <Link to="/profile" className="dropdown-item">
                   👤 Profile
                 </Link>
-
                 <button
                   onClick={handleLogout}
-                  className="ec-navbar__dropdown-item ec-navbar__logout"
+                  className="dropdown-item logout-btn"
                 >
                   <FaSignOutAlt /> Logout
                 </button>
@@ -108,10 +100,10 @@ const Navbar = () => {
             </div>
           ) : (
             <>
-              <Link to="/login" className="ec-navbar__btn-login">
+              <Link to="/login" className="btn btn-login">
                 Login
               </Link>
-              <Link to="/register" className="ec-navbar__btn-register">
+              <Link to="/register" className="btn btn-register">
                 Sign Up
               </Link>
             </>

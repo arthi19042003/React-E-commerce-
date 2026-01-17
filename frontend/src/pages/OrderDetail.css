@@ -1,166 +1,226 @@
-/* ===============================
-   ORDER DETAIL PAGE (EC)
-   =============================== */
+/* =========================================
+   ORDER DETAIL PAGE STYLES
+   Prefix: .order-detail-page- (Unique Namespace)
+   ========================================= */
 
-.ec-order-page {
-  padding: 3rem 1rem 5rem;
+/* Main Container */
+.order-detail-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
-/* Title */
-.ec-order-title {
-  text-align: center;
-  font-size: 2.2rem;
+/* Page Title */
+.order-detail-page-title {
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 2.5rem;
+  margin-bottom: 30px;
   color: #2c3e50;
+  border-bottom: 2px solid #f0f2f5;
+  padding-bottom: 15px;
 }
 
-/* Grid */
-.ec-order-grid {
+/* Layout Grid (Top Section) */
+.order-detail-page-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 30px;
+  margin-bottom: 30px;
 }
 
-/* Card */
-.ec-order-card {
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 14px;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
-}
-
-/* Headings */
-.ec-order-card h3 {
-  margin-bottom: 1.4rem;
-  font-size: 1.3rem;
-  color: #2c3e50;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 0.6rem;
-}
-
-/* Status Badge */
-.ec-order-status {
-  margin-left: 0.5rem;
-  padding: 0.25rem 0.7rem;
+/* Common Card Styling */
+.order-detail-page-card {
+  background: white;
+  padding: 25px;
   border-radius: 12px;
-  font-size: 0.8rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid #e1e4e8;
+}
+
+/* Headings inside cards */
+.order-detail-page-card h3 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #f0f2f5;
+  padding-bottom: 10px;
   font-weight: 600;
 }
 
-.ec-status-pending {
-  background: #fff3cd;
+/* Text Content inside cards */
+.order-detail-page-card p {
+  margin: 12px 0;
+  color: #555;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.order-detail-page-card strong {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+/* Status Badges */
+.order-detail-page-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Status Colors */
+.order-detail-page-status-pending {
+  background-color: #fff3cd;
   color: #856404;
 }
 
-.ec-status-processing {
-  background: #e3f2fd;
-  color: #1565c0;
+.order-detail-page-status-processing {
+  background-color: #cce5ff;
+  color: #004085;
 }
 
-.ec-status-completed {
-  background: #e8f5e9;
-  color: #2e7d32;
+.order-detail-page-status-shipped {
+  background-color: #d4edda;
+  color: #155724;
 }
 
-.ec-status-cancelled {
-  background: #fdecea;
-  color: #c62828;
+.order-detail-page-status-delivered {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.order-detail-page-status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
 /* Cancel Button */
-.ec-order-cancel-btn {
-  margin-top: 1.2rem;
-  padding: 0.7rem 1.4rem;
-  border-radius: 8px;
-  border: none;
-  background: #e74c3c;
+.order-detail-page-btn-cancel {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #e74c3c;
   color: white;
-  font-weight: 600;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
-.ec-order-cancel-btn:hover {
-  background: #c0392b;
+.order-detail-page-btn-cancel:hover {
+  background-color: #c0392b;
 }
 
-/* Items */
-.ec-order-items {
-  margin-top: 2.5rem;
-}
-
-.ec-order-item {
+/* Product List Styling */
+.order-detail-page-item-row {
   display: flex;
   justify-content: space-between;
-  padding: 1.2rem 0;
-  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f2f5;
 }
 
-.ec-order-item:last-child {
+.order-detail-page-item-row:last-of-type {
   border-bottom: none;
 }
 
-.ec-order-item-info {
+.order-detail-page-item-info {
   display: flex;
-  gap: 1rem;
   align-items: center;
+  gap: 20px;
 }
 
-.ec-order-item-info img {
-  width: 60px;
-  height: 60px;
+.order-detail-page-item-img {
+  width: 70px;
+  height: 70px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  padding: 4px;
 }
 
-.ec-order-item-price {
-  font-size: 1.2rem;
+.order-detail-page-item-text strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.order-detail-page-item-text p {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.order-detail-page-item-price {
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #27ae60;
+  color: #2c3e50;
 }
 
-/* Totals */
-.ec-order-totals {
-  margin-top: 2rem;
-  border-top: 2px solid #e0e0e0;
-  padding-top: 1.5rem;
+/* Totals Section */
+.order-detail-page-totals-box {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px dashed #e1e4e8;
 }
 
-.ec-order-row {
+.order-detail-page-total-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.8rem;
-  color: #555;
+  padding: 8px 0;
+  font-size: 1rem;
+  color: #666;
 }
 
-.ec-grand-total {
+/* Grand Total Specifics */
+.order-detail-page-grand-total {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #e1e4e8;
   font-size: 1.3rem;
+  font-weight: 800;
+  color: #2c3e50;
+  display: flex;
+  justify-content: space-between;
 }
 
-.ec-grand-total strong {
+.order-detail-page-grand-total span:last-child {
   color: #27ae60;
 }
 
-/* Loading/Error */
-.ec-order-loading,
-.ec-order-error {
+/* Loading & Error States */
+.order-detail-page-loading,
+.order-detail-page-error {
   text-align: center;
-  padding: 4rem;
+  padding: 60px;
   font-size: 1.2rem;
+  color: #666;
 }
 
-/* Responsive */
+.order-detail-page-error {
+  color: #e74c3c;
+}
+
+/* Responsive Design */
 @media (max-width: 900px) {
-  .ec-order-grid {
+  .order-detail-page-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
-  .ec-order-item {
+  .order-detail-page-item-row {
     flex-direction: column;
-    gap: 0.8rem;
+    align-items: flex-start;
+    gap: 15px;
   }
 
-  .ec-order-item-price {
+  .order-detail-page-item-price {
     align-self: flex-end;
   }
 }

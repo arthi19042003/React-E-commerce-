@@ -40,18 +40,27 @@ const Products = () => {
     }
   };
 
-  /* READ SEARCH FROM NAVBAR / URL */
+  /* READ SEARCH & CATEGORY FROM URL */
   useEffect(() => {
-    const stateSearch = location.state?.search || '';
     const params = new URLSearchParams(location.search);
+    
+    // 1. Read Search
+    const stateSearch = location.state?.search || '';
     const querySearch = params.get('search') || '';
     setSearch(stateSearch || querySearch);
+
+    // 2. Read Category (The Fix!)
+    const queryCategory = params.get('category') || '';
+    if (queryCategory) {
+      setCategory(queryCategory);
+    }
   }, [location]);
 
   /* FILTER + SORT */
   useEffect(() => {
     let data = [...products];
 
+    // Filter by Search
     if (search) {
       data = data.filter(p =>
         p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -59,10 +68,16 @@ const Products = () => {
       );
     }
 
+    // Filter by Category (Updated logic)
     if (category) {
-      data = data.filter(p => p.category?.name === category);
+      data = data.filter(p => 
+        // Match Name (from Dropdown) OR Match ID (from URL)
+        p.category?.name === category || 
+        p.category?._id === category
+      );
     }
 
+    // Sort
     if (sort === 'price-low') {
       data.sort((a, b) => a.price - b.price);
     }
@@ -76,53 +91,51 @@ const Products = () => {
     setFilteredProducts(data);
   }, [search, category, sort, products]);
 
-  if (loading) return <div className="loading">Loading products...</div>;
+  if (loading) return <div className="products-page-loading">Loading products...</div>;
 
   return (
-    <div className="ec-products-page">
-      <div className="container">
-        <h1 className="page-title">All Products</h1>
+    <div className="products-page-container">
+      <h1 className="products-page-title">All Products</h1>
 
-        {/* SEARCH + SORT + FILTER BAR */}
-        <div className="products-toolbar">
-          {/* LEFT: SEARCH */}
-          <div className="toolbar-search">
-            <input
-              type="text"
-              placeholder=" 🔍 Search products..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          {/* RIGHT: SORT + CATEGORY */}
-          <div className="toolbar-actions">
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              <option value="">Sort By</option>
-              <option value="price-low">Price: Low → High</option>
-              <option value="price-high">Price: High → Low</option>
-              <option value="name">Name (A–Z)</option>
-            </select>
-
-            <select value={category} onChange={(e) => setCategory(e.target.value)}>
-              <option value="">Category</option>
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </div>
+      {/* SEARCH + SORT + FILTER BAR */}
+      <div className="products-page-toolbar">
+        {/* LEFT: SEARCH */}
+        <div className="products-page-toolbar-search">
+          <input
+            type="text"
+            placeholder=" 🔍 Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
 
-        {filteredProducts.length === 0 ? (
-          <p className="no-results">No products found</p>
-        ) : (
-          <div className="grid grid-4">
-            {filteredProducts.map(product => (
-              <ProductCard key={product._id} product={product} />
+        {/* RIGHT: SORT + CATEGORY */}
+        <div className="products-page-toolbar-actions">
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+            <option value="">Sort By</option>
+            <option value="price-low">Price: Low → High</option>
+            <option value="price-high">Price: High → Low</option>
+            <option value="name">Name (A–Z)</option>
+          </select>
+
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option value="">Category</option>
+            {categories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
             ))}
-          </div>
-        )}
+          </select>
+        </div>
       </div>
+
+      {filteredProducts.length === 0 ? (
+        <p className="products-page-no-results">No products found</p>
+      ) : (
+        <div className="products-page-grid">
+          {filteredProducts.map(product => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,61 +1,56 @@
 const express = require('express');
-const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
-const path = require('path'); // <--- IMPORT PATH MODULE
+const path = require('path');
+const fs = require('fs'); // Import file system module
 
-// Load environment variables
+// Routes
+const authRoutes = require('./routes/authRoutes');
+const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+
 dotenv.config();
-
-// Connect to Database
 connectDB();
 
-// Initialize express app
 const app = express();
-
-// Middleware
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Static files for uploads (Images)
-app.use('/uploads', express.static('uploads'));
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/cart', cartRoutes);
 
-// --- API ROUTES ---
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/products', require('./routes/productRoutes'));
-app.use('/api/categories', require('./routes/categoryRoutes'));
-app.use('/api/cart', require('./routes/cartRoutes'));
-app.use('/api/orders', require('./routes/orderRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
+// ----------------------------------------------------
+// UNIVERSAL IMAGE FIX
+// ----------------------------------------------------
+// Check if uploads folder is in backend or root, and serve the correct one
+const backendUploads = path.join(__dirname, 'uploads');
+const rootUploads = path.join(__dirname, '../uploads');
 
-// -------------------------------------------------------------------------
-//  SERVE FRONTEND (This makes it run on Port 5000)
-// -------------------------------------------------------------------------
+if (fs.existsSync(backendUploads)) {
+    console.log(`✅ Serving images from backend folder: ${backendUploads}`);
+    app.use('/uploads', express.static(backendUploads));
+} else if (fs.existsSync(rootUploads)) {
+    console.log(`✅ Serving images from root folder: ${rootUploads}`);
+    app.use('/uploads', express.static(rootUploads));
+} else {
+    console.log('⚠️ Warning: Uploads folder not found in backend or root!');
+}
 
-// 1. Serve static files from the frontend build folder
-const buildPath = path.join(__dirname, '../frontend/build');
-app.use(express.static(buildPath));
+// ----------------------------------------------------
+// FRONTEND SERVING
+// ----------------------------------------------------
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-// 2. Catch-All Route: Send index.html for any request that isn't an API
 app.get('*', (req, res) => {
-  res.sendFile(path.join(buildPath, 'index.html'));
-});
-
-// -------------------------------------------------------------------------
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Internal Server Error'
-  });
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`🚀 App is running on port ${PORT}`);
-  console.log(`🔗 Open http://localhost:${PORT} to view your app`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,0 +1,238 @@
+/* =========================================
+   ManageProducts.css
+   (Unique Prefix: .mp-)
+   ========================================= */
+
+/* --- 1. MAIN LAYOUT --- */
+.mp-wrapper {
+  padding: 2rem;
+  background: #f4f6f9;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.mp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.mp-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+/* --- 2. FORM STYLES --- */
+.mp-form {
+  background: white;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  max-width: 900px; /* Wider form for 2 columns */
+  margin: 0 auto 30px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border: 1px solid #eee;
+}
+
+.mp-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+
+.mp-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #34495e;
+  font-size: 0.95rem;
+}
+
+.mp-input, .mp-select, .mp-textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #fcfcfc;
+}
+
+.mp-input:focus, .mp-select:focus, .mp-textarea:focus {
+  border-color: #3498db;
+  background-color: #fff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.mp-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* --- 3. IMAGE & CHECKBOX SECTIONS --- */
+.mp-image-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mp-btn-add-img {
+  background: #eef2f7;
+  color: #2c3e50;
+  border: 1px solid #dce2e8;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  margin-top: 5px;
+}
+
+.mp-btn-add-img:hover {
+  background: #dfe6ed;
+}
+
+.mp-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 25px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.mp-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #3498db;
+}
+
+.mp-checkbox-label {
+  font-weight: 600;
+  color: #2c3e50;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* --- 4. BUTTONS --- */
+.mp-btn-save {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+  transition: transform 0.2s;
+}
+
+.mp-btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+}
+
+.mp-btn {
+  padding: 12px 24px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.mp-btn:hover { background: #2980b9; }
+
+/* --- 5. TABLE STYLES --- */
+.mp-table-box {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.mp-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.mp-table th {
+  background: #f8f9fa;
+  padding: 18px 20px;
+  text-align: left;
+  border-bottom: 2px solid #eee;
+  color: #7f8c8d;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.mp-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+  color: #333;
+}
+
+.mp-img-thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  padding: 4px;
+  background: white;
+}
+
+/* Action Buttons (Small) */
+.mp-btn-sm {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  margin-right: 8px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+.mp-edit { background: #17a2b8; } .mp-edit:hover { background: #138496; }
+.mp-del { background: #e74c3c; } .mp-del:hover { background: #c0392b; }
+
+/* --- 6. POPUP OVERLAY --- */
+.mp-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(3px);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 10000;
+}
+.mp-popup {
+  background: white; padding: 40px; border-radius: 16px;
+  text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.mp-icon {
+  width: 70px; height: 70px; background: #2ecc71; color: white;
+  border-radius: 50%; display: flex; justify-content: center; align-items: center;
+  font-size: 35px; margin: 0 auto 20px;
+}
+.mp-icon-error { background: #e74c3c; }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }

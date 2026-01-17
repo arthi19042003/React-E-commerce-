@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../services/api';
-import { toast } from 'react-toastify';
+import { FaCheck, FaTimes } from 'react-icons/fa'; // Make sure you have react-icons installed
+import './ManageCategories.css';
 
 const ManageCategories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    description: ''
-  });
+  const [formData, setFormData] = useState({ name: '', description: '' });
+  
+  // POPUP STATE
+  const [popup, setPopup] = useState({ show: false, message: '', type: 'success' });
 
   useEffect(() => {
     loadCategories();
   }, []);
+
+  // Helper to show popup
+  const showPopup = (message, type = 'success') => {
+    setPopup({ show: true, message, type });
+    setTimeout(() => setPopup({ show: false, message: '', type: '' }), 2000); // Auto hide after 2s
+  };
 
   const loadCategories = async () => {
     try {
       const res = await getCategories();
       setCategories(res.data.categories);
     } catch (error) {
-      toast.error('Error loading categories');
+      console.error('Error loading categories');
     } finally {
       setLoading(false);
     }
@@ -32,35 +39,26 @@ const ManageCategories = () => {
     try {
       if (editingCategory) {
         await updateCategory(editingCategory._id, formData);
-        toast.success('Category updated successfully');
+        showPopup('Category updated successfully!');
       } else {
         await createCategory(formData);
-        toast.success('Category created successfully');
+        showPopup('Category created successfully!');
       }
       resetForm();
       loadCategories();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Operation failed');
+      showPopup(error.response?.data?.message || 'Operation failed', 'error');
     }
-  };
-
-  const handleEdit = (category) => {
-    setEditingCategory(category);
-    setFormData({
-      name: category.name,
-      description: category.description || ''
-    });
-    setShowForm(true);
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure? This will affect all products in this category.')) {
       try {
         await deleteCategory(id);
-        toast.success('Category deleted successfully');
+        showPopup('Category deleted successfully!');
         loadCategories();
       } catch (error) {
-        toast.error('Failed to delete category');
+        showPopup('Failed to delete category', 'error');
       }
     }
   };
@@ -71,91 +69,63 @@ const ManageCategories = () => {
     setShowForm(false);
   };
 
+  const handleEdit = (category) => {
+    setEditingCategory(category);
+    setFormData({ name: category.name, description: category.description || '' });
+    setShowForm(true);
+  };
+
   if (loading) return <div className="loading">Loading...</div>;
 
   return (
-    <div className="manage-section">
-      <div className="section-header">
+    <div className="mc-wrapper">
+      {popup.show && (
+        <div className="mc-popup-overlay">
+          <div className="mc-popup-content">
+            <div className={popup.type === 'success' ? 'mc-icon-success' : 'mc-icon-error'}>
+              {popup.type === 'success' ? <FaCheck /> : <FaTimes />}
+            </div>
+            <p className="mc-msg">{popup.message}</p>
+          </div>
+        </div>
+      )}
+
+      <div className="mc-header">
         <h1>Manage Categories</h1>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? '✕ Cancel' : '➕ Add New Category'}
+        <button className="mc-btn mc-btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel' : 'Add New Category'}
         </button>
       </div>
 
       {showForm && (
-        <div className="form-card">
+        <div className="mc-form-card">
           <h2>{editingCategory ? 'Edit Category' : 'Add New Category'}</h2>
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Category Name *</label>
-              <input
-                type="text"
-                className="form-control"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-                placeholder="e.g., Electronics, Clothing, Books"
-              />
+            <div className="mc-form-group">
+              <label className="mc-label">Name</label>
+              <input className="mc-input" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
             </div>
-
-            <div className="form-group">
-              <label>Description</label>
-              <textarea
-                className="form-control"
-                rows="3"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Brief description of this category"
-              />
+            <div className="mc-form-group">
+              <label className="mc-label">Description</label>
+              <textarea className="mc-input" rows="3" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
             </div>
-
-            <div className="form-actions">
-              <button type="submit" className="btn btn-success">
-                {editingCategory ? '💾 Update Category' : '➕ Add Category'}
-              </button>
-              <button type="button" className="btn btn-secondary" onClick={resetForm}>
-                Cancel
-              </button>
-            </div>
+            <button type="submit" className="mc-btn mc-btn-success">{editingCategory ? 'Update' : 'Save'}</button>
+            <button type="button" className="mc-btn mc-btn-secondary" onClick={resetForm}>Cancel</button>
           </form>
         </div>
       )}
 
-      <div className="categories-grid-view">
-        <h2>All Categories ({categories.length})</h2>
-        {categories.length === 0 ? (
-          <div className="empty-state">
-            <p>No categories yet. Add your first category to organize products!</p>
+      <div className="mc-grid">
+        {categories.map(cat => (
+          <div key={cat._id} className="mc-card">
+            <h3>{cat.name}</h3>
+            <p>{cat.description}</p>
+            <div className="mc-actions">
+              <button className="mc-btn mc-btn-sm mc-btn-info" onClick={() => handleEdit(cat)}>Edit</button>
+              <button className="mc-btn mc-btn-sm mc-btn-danger" onClick={() => handleDelete(cat._id)}>Delete</button>
+            </div>
           </div>
-        ) : (
-          <div className="categories-grid">
-            {categories.map(category => (
-              <div key={category._id} className="category-item">
-                <div className="category-content">
-                  <h3>{category.name}</h3>
-                  <p>{category.description || 'No description'}</p>
-                </div>
-                <div className="category-actions">
-                  <button 
-                    className="btn btn-sm btn-info"
-                    onClick={() => handleEdit(category)}
-                  >
-                    Edit
-                  </button>
-                  <button 
-                    className="btn btn-sm btn-danger"
-                    onClick={() => handleDelete(category._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        ))}
       </div>
     </div>
   );

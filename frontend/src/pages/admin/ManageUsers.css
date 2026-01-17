@@ -1,0 +1,14 @@
+/* Unique Styles for Manage Users */
+.mu-wrapper { padding: 2rem; background: #f4f6f9; min-height: 100vh; font-family: sans-serif; }
+.mu-header { background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; }
+.mu-table-box { background: white; border-radius: 12px; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.mu-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+.mu-table th { background: #f8f9fa; padding: 15px; text-align: left; border-bottom: 2px solid #eee; }
+.mu-table td { padding: 15px; border-bottom: 1px solid #f0f0f0; }
+
+.mu-btn-del { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+.mu-btn-del:hover { background: #c0392b; }
+
+.mu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+.mu-popup { background: white; padding: 30px; border-radius: 12px; text-align: center; }
+.mu-icon { font-size: 30px; color: #27ae60; margin-bottom: 10px; }

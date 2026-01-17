@@ -1,99 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { getAllUsers, deleteUser } from '../../services/api';
-import { toast } from 'react-toastify';
+import { FaCheck, FaTimes } from 'react-icons/fa';
+import './ManageUsers.css';
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [popup, setPopup] = useState({ show: false, message: '', type: 'success' });
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
+  useEffect(() => { loadUsers(); }, []);
+
+  const showPopup = (message, type = 'success') => {
+    setPopup({ show: true, message, type });
+    setTimeout(() => setPopup({ show: false, message: '', type: '' }), 2000);
+  };
 
   const loadUsers = async () => {
     try {
       const res = await getAllUsers();
       setUsers(res.data.users);
-    } catch (error) {
-      toast.error('Error loading users');
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { console.error('Error'); }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm('Delete User?')) {
       try {
         await deleteUser(id);
-        toast.success('User deleted successfully');
+        showPopup('User deleted successfully!');
         loadUsers();
-      } catch (error) {
-        toast.error('Failed to delete user');
-      }
+      } catch (e) { showPopup('Failed to delete', 'error'); }
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
-
   return (
-    <div className="manage-section">
-      <div className="section-header">
-        <h1>Manage Users</h1>
-      </div>
-
-      {users.length === 0 ? (
-        <div className="empty-state">
-          <p>No users found</p>
-        </div>
-      ) : (
-        <div className="users-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Phone</th>
-                <th>Joined Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map(user => (
-                <tr key={user._id}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>
-                    <span className={`role-badge ${user.role}`}>
-                      {user.role}
-                    </span>
-                  </td>
-                  <td>{user.phone || 'N/A'}</td>
-                  <td>{new Date(user.createdAt).toLocaleDateString()}</td>
-                  <td>
-                    <span className={user.isActive ? 'status-active' : 'status-inactive'}>
-                      {user.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td>
-                    {user.role !== 'admin' && (
-                      <button 
-                        className="btn btn-sm btn-danger"
-                        onClick={() => handleDelete(user._id)}
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="mu-wrapper">
+      {popup.show && (
+        <div className="mu-overlay">
+          <div className="mu-popup">
+             <div className="mu-icon"><FaCheck /></div>
+             <p>{popup.message}</p>
+          </div>
         </div>
       )}
+      <div className="mu-header"><h1>Manage Users</h1></div>
+      <div className="mu-table-box">
+        <table className="mu-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+          <tbody>
+            {users.map(u => (
+              <tr key={u._id}>
+                <td>{u.name}</td><td>{u.email}</td><td>{u.role}</td>
+                <td><button className="mu-btn-del" onClick={()=>handleDelete(u._id)}>Delete</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
-};
 
+};
 export default ManageUsers;

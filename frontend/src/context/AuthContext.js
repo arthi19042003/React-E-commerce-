@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 export const AuthContext = createContext();
 
@@ -39,11 +38,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);
-      toast.success(res.data.message);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Registration failed';
-      toast.error(message);
+      console.error(message);
       return { success: false, message };
     }
   };
@@ -55,11 +53,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);
-      toast.success(res.data.message);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed';
-      toast.error(message);
+      console.error(message);
       return { success: false, message };
     }
   };
@@ -70,7 +67,6 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common['Authorization'];
     setToken(null);
     setUser(null);
-    toast.info('Logged out successfully');
   };
 
   // Update profile
@@ -78,11 +74,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await axios.put('/api/auth/profile', userData);
       setUser(res.data.user);
-      toast.success(res.data.message);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Update failed';
-      toast.error(message);
+      console.error(message);
       return { success: false, message };
     }
   };

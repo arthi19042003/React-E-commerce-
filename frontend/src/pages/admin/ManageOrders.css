@@ -1,0 +1,23 @@
+/* Unique Styles for Manage Orders */
+.mo-wrapper { padding: 2rem; background: #f4f6f9; min-height: 100vh; font-family: sans-serif; }
+.mo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: white; padding: 1.5rem; border-radius: 10px; }
+.mo-select { padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+
+/* Unique Table */
+.mo-table-container { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow-x: auto; }
+.mo-table { width: 100%; border-collapse: collapse; min-width: 800px; }
+.mo-table th { background: #f8f9fa; padding: 15px; text-align: left; color: #7f8c8d; border-bottom: 2px solid #eee; }
+.mo-table td { padding: 15px; border-bottom: 1px solid #f0f0f0; color: #333; }
+
+/* Status Badges */
+.mo-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; display: inline-block; }
+.mo-status-pending { background: #fff3cd; color: #856404; }
+.mo-status-processing { background: #cce5ff; color: #004085; }
+.mo-status-shipped { background: #d1ecf1; color: #0c5460; }
+.mo-status-delivered { background: #d4edda; color: #155724; }
+
+/* Popup */
+.mo-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+.mo-popup-box { background: white; padding: 40px; border-radius: 16px; text-align: center; animation: fadeIn 0.3s; }
+.mo-icon { width: 60px; height: 60px; background: #27ae60; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; margin: 0 auto 15px; }
+.mo-text { font-size: 1.1rem; font-weight: bold; }

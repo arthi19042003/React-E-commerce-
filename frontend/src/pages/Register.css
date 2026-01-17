@@ -1,22 +1,27 @@
-/* ================================ */
-/* REGISTER PAGE – UNIQUE CSS ONLY  */
-/* ================================ */
+/* =========================================
+   REGISTER PAGE STYLES
+   Prefix: .register-page- (Unique Namespace)
+   ========================================= */
 
-.ec-register-page .auth-page {
-  min-height: calc(100vh - 70px);
+/* Main Page Wrapper */
+.register-page-wrapper {
+  min-height: calc(100vh - 70px); /* Adjust based on navbar height */
   display: flex;
   justify-content: center;
   align-items: center;
   background: #f4f6f8;
+  width: 100%;
 }
 
-.ec-register-page .auth-container {
+/* Container limits width */
+.register-page-container {
   width: 100%;
   max-width: 480px;
   padding: 20px;
 }
 
-.ec-register-page .auth-card {
+/* Card Styling */
+.register-page-card {
   background: #ffffff;
   padding: 32px 36px;
   border-radius: 14px;
@@ -24,7 +29,7 @@
 }
 
 /* Heading */
-.ec-register-page .auth-card h2 {
+.register-page-card h2 {
   text-align: center;
   margin-bottom: 26px;
   color: #2c3e50;
@@ -32,17 +37,18 @@
   font-weight: 700;
 }
 
-/* Form */
-.ec-register-page .auth-form {
+/* Form Layout */
+.register-page-form {
   display: flex;
   flex-direction: column;
 }
 
-.ec-register-page .form-group {
+/* Input Group */
+.register-page-group {
   margin-bottom: 18px;
 }
 
-.ec-register-page .form-group label {
+.register-page-group label {
   display: block;
   margin-bottom: 6px;
   font-size: 14px;
@@ -50,30 +56,32 @@
   color: #34495e;
 }
 
-.ec-register-page .form-control {
+/* Input Fields */
+.register-page-input {
   width: 100%;
   padding: 11px 12px;
   border-radius: 8px;
   border: 1.8px solid #dcdcdc;
   font-size: 14px;
   transition: all 0.25s ease;
+  background-color: #fff;
 }
 
-.ec-register-page .form-control:focus {
+.register-page-input:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
 }
 
-/* Password hint */
-.ec-register-page .password-hint {
+/* Password Hint Text */
+.register-page-hint {
   font-size: 12px;
   color: #7f8c8d;
   margin-top: 4px;
 }
 
-/* Button */
-.ec-register-page .btn-auth {
+/* Submit Button */
+.register-page-btn {
   margin-top: 10px;
   padding: 12px;
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -86,36 +94,36 @@
   transition: all 0.3s ease;
 }
 
-.ec-register-page .btn-auth:hover {
+.register-page-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(118, 75, 162, 0.4);
 }
 
-/* Bottom link */
-.ec-register-page .auth-link {
+/* Bottom Link */
+.register-page-link {
   margin-top: 20px;
   text-align: center;
   font-size: 14px;
   color: #555;
 }
 
-.ec-register-page .auth-link a {
+.register-page-link a {
   color: #667eea;
   font-weight: 600;
   text-decoration: none;
 }
 
-.ec-register-page .auth-link a:hover {
+.register-page-link a:hover {
   text-decoration: underline;
 }
 
-/* Mobile */
+/* Responsive Mobile Styles */
 @media (max-width: 480px) {
-  .ec-register-page .auth-card {
+  .register-page-card {
     padding: 26px 22px;
   }
 
-  .ec-register-page .auth-card h2 {
+  .register-page-card h2 {
     font-size: 22px;
   }
 }

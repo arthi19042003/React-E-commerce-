@@ -1,41 +1,207 @@
-/* ===============================
-   EC-NAVBAR (ISOLATED)
-   =============================== */
-
-.ec-navbar {
+.navbar {
   background-color: #2c3e50;
-  color: #ffffff;
+  color: white;
   padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Layout */
-.ec-navbar__container {
+.navbar .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.navbar-brand h2 {
+  margin: 0;
+  color: white;
+  font-size: 1.8rem;
+}
+
+.navbar-menu {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.2rem;
+  gap: 1.5rem;
 }
 
-/* ================= BRAND ================= */
-
-.ec-navbar__brand h2 {
-  margin: 0;
-  font-size: 1.8rem;
-  color: #ffffff;
-  font-weight: 700;
+.nav-link {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+  position: relative;
+  font-weight: 500;
 }
 
-/* ================= SEARCH ================= */
+.nav-link:hover {
+  color: #3498db;
+}
 
-.ec-navbar__search {
+.cart-link {
+  position: relative;
+  font-size: 1.4rem;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* Auth Buttons */
+.btn-login {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-login:hover {
+  background: white;
+  color: #2c3e50;
+}
+
+.btn-register {
+  background: #3498db;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  border: 2px solid #3498db;
+  transition: all 0.3s;
+}
+
+.btn-register:hover {
+  background: #2980b9;
+  border-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.btn-admin {
+  background: #e67e22;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-admin:hover {
+  background: #d35400;
+  transform: translateY(-2px);
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.user-info:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.user-icon {
+  font-size: 1.2rem;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.user-menu:hover .dropdown {
+  display: block;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.2rem;
+  color: #333;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.logout-btn {
+  border-top: 1px solid #e0e0e0;
+  color: #e74c3c;
+}
+
+.logout-btn:hover {
+  background-color: #fee;
+}
+
+@media (max-width: 768px) {
+  .navbar-menu {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .navbar .container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .btn-login,
+  .btn-register {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* ================= SEARCH BAR ================= */
+
+.navbar-search {
   display: flex;
   align-items: center;
   background: #ffffff;
@@ -44,207 +210,35 @@
   width: 280px;
 }
 
-.ec-navbar__search input {
+.navbar-search input {
   flex: 1;
   border: none;
-  outline: none;
-  padding: 8px 14px;
-  font-size: 14px;
+  padding: 8px 12px;
   border-radius: 20px;
+  outline: none;
+  font-size: 14px;
 }
 
-.ec-navbar__search button {
+.navbar-search button {
   border: none;
   background: #3498db;
-  color: #ffffff;
+  color: white;
   border-radius: 50%;
   width: 34px;
   height: 34px;
-
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  cursor: pointer;
-  transition: background 0.3s ease;
 }
 
-.ec-navbar__search button:hover {
+.navbar-search button:hover {
   background: #2980b9;
 }
 
-/* ================= MENU ================= */
-
-.ec-navbar__menu {
-  display: flex;
-  align-items: center;
-  gap: 1.4rem;
-}
-
-/* Links */
-.ec-navbar__link {
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.25s ease;
-}
-
-.ec-navbar__link:hover {
-  color: #3498db;
-}
-
-/* ================= CART ================= */
-
-.ec-navbar__cart {
-  position: relative;
-  font-size: 1.4rem;
-  color: #ffffff;
-}
-
-.ec-navbar__cart-badge {
-  position: absolute;
-  top: -7px;
-  right: -10px;
-
-  background: #e74c3c;
-  color: #ffffff;
-  border-radius: 50%;
-  padding: 2px 6px;
-
-  font-size: 11px;
-  font-weight: bold;
-}
-
-/* ================= BUTTONS ================= */
-
-.ec-navbar__btn-login {
-  background: transparent;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  padding: 0.55rem 1.4rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.ec-navbar__btn-login:hover {
-  background: #ffffff;
-  color: #2c3e50;
-}
-
-.ec-navbar__btn-register {
-  background: #3498db;
-  color: #ffffff;
-  border: none;
-  padding: 0.55rem 1.4rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.ec-navbar__btn-register:hover {
-  background: #2980b9;
-}
-
-.ec-navbar__btn-admin {
-  background: #e67e22;
-  color: #ffffff;
-  padding: 0.55rem 1.4rem;
-  border-radius: 6px;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.ec-navbar__btn-admin:hover {
-  background: #d35400;
-}
-
-/* ================= USER MENU ================= */
-
-.ec-navbar__user {
-  position: relative;
-}
-
-.ec-navbar__user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  padding: 0.45rem 1rem;
-  border-radius: 6px;
-}
-
-.ec-navbar__user-info:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.ec-navbar__user-name {
-  font-weight: 500;
-}
-
-/* Dropdown */
-.ec-navbar__dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-
-  background: #ffffff;
-  min-width: 180px;
-  border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
-  margin-top: 8px;
-  overflow: hidden;
-}
-
-.ec-navbar__user:hover .ec-navbar__dropdown {
-  display: block;
-}
-
-.ec-navbar__dropdown-item {
-  display: block;
-  width: 100%;
-  padding: 0.85rem 1.2rem;
-  background: none;
-  border: none;
-
-  text-align: left;
-  text-decoration: none;
-  font-size: 14px;
-  color: #333;
-
-  cursor: pointer;
-}
-
-.ec-navbar__dropdown-item:hover {
-  background: #f5f5f5;
-}
-
-.ec-navbar__logout {
-  border-top: 1px solid #e0e0e0;
-  color: #e74c3c;
-}
-
-/* ================= RESPONSIVE ================= */
-
+/* Hide search on mobile for clean UI */
 @media (max-width: 900px) {
-  .ec-navbar__search {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .ec-navbar__container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .ec-navbar__menu {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .ec-navbar__user-name {
+  .navbar-search {
     display: none;
   }
 }

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import './Login.css';
+import './Login.css'; // Importing the unique CSS
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,18 +19,17 @@ const Login = () => {
   };
 
   return (
-    /* ✅ UNIQUE PAGE SCOPE */
-    <div className="ec-login-page">
-      <div className="ec-login-container">
-        <div className="ec-login-card">
-          <h2 className="ec-login-title">Welcome Back!</h2>
+    <div className="login-page-wrapper">
+      <div className="login-page-container">
+        <div className="login-page-card">
+          <h2>Welcome Back!</h2>
 
-          <form onSubmit={handleSubmit} className="ec-login-form">
-            <div className="ec-login-group">
+          <form onSubmit={handleSubmit} className="login-page-form">
+            <div className="login-page-group">
               <label>Email Address</label>
               <input
                 type="email"
-                className="ec-login-input"
+                className="login-page-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
@@ -38,11 +37,11 @@ const Login = () => {
               />
             </div>
 
-            <div className="ec-login-group">
+            <div className="login-page-group">
               <label>Password</label>
               <input
                 type="password"
-                className="ec-login-input"
+                className="login-page-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
@@ -50,12 +49,12 @@ const Login = () => {
               />
             </div>
 
-            <button type="submit" className="ec-login-btn">
+            <button type="submit" className="login-page-btn">
               Login
             </button>
           </form>
 
-          <p className="ec-login-link">
+          <p className="login-page-link">
             Don't have an account? <Link to="/register">Sign up here</Link>
           </p>
         </div>

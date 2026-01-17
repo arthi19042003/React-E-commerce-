@@ -1,32 +1,35 @@
-/* ============================= */
-/*        LOGIN PAGE (EC)        */
-/* ============================= */
+/* =========================================
+   LOGIN PAGE STYLES
+   Prefix: .login-page- (Unique Namespace)
+   ========================================= */
 
-.ec-login-page {
-  min-height: calc(100vh - 70px);
+/* Main Page Wrapper: Centers content vertically & horizontally */
+.login-page-wrapper {
+  min-height: calc(100vh - 70px); /* Adjust based on navbar height */
   display: flex;
   justify-content: center;
   align-items: center;
   background: #f4f6f8;
+  width: 100%;
 }
 
-/* Container */
-.ec-login-container {
+/* Container limits width */
+.login-page-container {
   width: 100%;
   max-width: 420px;
   padding: 20px;
 }
 
-/* Card */
-.ec-login-card {
+/* Card Styling (White Box) */
+.login-page-card {
   background: #ffffff;
   padding: 30px 34px;
   border-radius: 14px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
 }
 
-/* Title */
-.ec-login-title {
+/* Heading Typography */
+.login-page-card h2 {
   text-align: center;
   margin-bottom: 24px;
   color: #2c3e50;
@@ -34,18 +37,18 @@
   font-weight: 700;
 }
 
-/* Form */
-.ec-login-form {
+/* Form Layout */
+.login-page-form {
   display: flex;
   flex-direction: column;
 }
 
-/* Input group */
-.ec-login-group {
+/* Input Group Container */
+.login-page-group {
   margin-bottom: 18px;
 }
 
-.ec-login-group label {
+.login-page-group label {
   display: block;
   margin-bottom: 6px;
   font-size: 14px;
@@ -53,24 +56,25 @@
   color: #34495e;
 }
 
-/* Inputs */
-.ec-login-input {
+/* Input Fields */
+.login-page-input {
   width: 100%;
   padding: 11px 12px;
   border-radius: 8px;
   border: 1.8px solid #dcdcdc;
   font-size: 14px;
   transition: all 0.25s ease;
+  background-color: #fff;
 }
 
-.ec-login-input:focus {
+.login-page-input:focus {
   outline: none;
   border-color: #3498db;
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
 }
 
-/* Button */
-.ec-login-btn {
+/* Submit Button */
+.login-page-btn {
   margin-top: 12px;
   padding: 12px;
   background: #3498db;
@@ -83,36 +87,37 @@
   transition: all 0.3s ease;
 }
 
-.ec-login-btn:hover {
+.login-page-btn:hover {
   background: #2e86c1;
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(52, 152, 219, 0.35);
 }
 
-/* Bottom link */
-.ec-login-link {
+/* Footer Link (Sign Up) */
+.login-page-link {
   margin-top: 18px;
   text-align: center;
   font-size: 14px;
+  color: #666;
 }
 
-.ec-login-link a {
+.login-page-link a {
   color: #3498db;
   font-weight: 600;
   text-decoration: none;
 }
 
-.ec-login-link a:hover {
+.login-page-link a:hover {
   text-decoration: underline;
 }
 
-/* Mobile */
+/* Responsive Mobile Styles */
 @media (max-width: 480px) {
-  .ec-login-card {
+  .login-page-card {
     padding: 26px 22px;
   }
 
-  .ec-login-title {
+  .login-page-card h2 {
     font-size: 22px;
   }
 }

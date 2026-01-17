@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { AuthContext } from './AuthContext'; // <--- FIXED THIS PATH
+import { AuthContext } from './AuthContext';
 
 export const CartContext = createContext();
 
@@ -14,8 +13,6 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated) {
       loadCart();
-    } else {
-      setCart(null); // Clear cart on logout
     }
   }, [isAuthenticated]);
 
@@ -34,18 +31,17 @@ export const CartProvider = ({ children }) => {
   // Add to cart
   const addToCart = async (productId, quantity = 1) => {
     if (!isAuthenticated) {
-      toast.error('Please login to add items to cart');
+      alert('Please login to add items to cart');
       return { success: false };
     }
 
     try {
       const res = await axios.post('/api/cart/add', { productId, quantity });
       setCart(res.data.cart);
-      toast.success(res.data.message);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to add to cart';
-      toast.error(message);
+      console.error(message);
       return { success: false, message };
     }
   };
@@ -55,11 +51,10 @@ export const CartProvider = ({ children }) => {
     try {
       const res = await axios.put(`/api/cart/update/${itemId}`, { quantity });
       setCart(res.data.cart);
-      toast.success(res.data.message);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to update cart';
-      toast.error(message);
+      console.error(message);
       return { success: false, message };
     }
   };
@@ -69,11 +64,10 @@ export const CartProvider = ({ children }) => {
     try {
       const res = await axios.delete(`/api/cart/remove/${itemId}`);
       setCart(res.data.cart);
-      toast.success(res.data.message);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to remove item';
-      toast.error(message);
+      console.error(message);
       return { success: false, message };
     }
   };
@@ -83,16 +77,15 @@ export const CartProvider = ({ children }) => {
     try {
       const res = await axios.delete('/api/cart/clear');
       setCart(res.data.cart);
-      toast.success(res.data.message);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Failed to clear cart';
-      toast.error(message);
+      console.error(message);
       return { success: false, message };
     }
   };
 
-  const cartItemsCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+  const cartItemsCount = cart?.items?.length || 0;
   const cartTotal = cart?.totalAmount || 0;
 
   return (

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getFeaturedProducts, getCategories } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import { FaShippingFast, FaShieldAlt, FaHeadset, FaMoneyBillWave } from 'react-icons/fa';
-import './Home.css';
+import './Home.css'; // Importing the unique CSS
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -30,55 +30,55 @@ const Home = () => {
   };
 
   return (
-    <div className="home-page">
+    <div className="home-page-wrapper">
       {/* Hero Banner */}
-      <section className="hero-banner">
-        <div className="hero-content">
-          <div className="hero-text">
+      <section className="home-page-hero-banner">
+        <div className="home-page-hero-content">
+          <div className="home-page-hero-text">
             <h1>Shop Smart, Live Better</h1>
             <p>Discover amazing products at unbeatable prices</p>
-            <div className="hero-buttons">
-              <Link to="/products" className="btn btn-primary btn-lg">
+            <div className="home-page-hero-buttons">
+              <Link to="/products" className="home-page-btn home-page-btn-primary">
                 Shop Now
               </Link>
-              <Link to="/products?sort=newest" className="btn btn-outline btn-lg">
+              <Link to="/products?sort=newest" className="home-page-btn home-page-btn-outline">
                 New Arrivals
               </Link>
             </div>
           </div>
-          <div className="hero-image">
+          <div className="home-page-hero-image">
             <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800" alt="Shopping" />
           </div>
         </div>
       </section>
 
       {/* Features Bar */}
-      <section className="features-bar">
-        <div className="container">
-          <div className="features-grid">
-            <div className="feature-item">
-              <FaShippingFast className="feature-icon" />
+      <section className="home-page-features-bar">
+        <div className="home-page-container">
+          <div className="home-page-features-grid">
+            <div className="home-page-feature-item">
+              <FaShippingFast className="home-page-feature-icon" />
               <div>
                 <h4>Free Shipping</h4>
                 <p>On orders above ₹500</p>
               </div>
             </div>
-            <div className="feature-item">
-              <FaMoneyBillWave className="feature-icon" />
+            <div className="home-page-feature-item">
+              <FaMoneyBillWave className="home-page-feature-icon" />
               <div>
                 <h4>Easy Returns</h4>
                 <p>7 days return policy</p>
               </div>
             </div>
-            <div className="feature-item">
-              <FaShieldAlt className="feature-icon" />
+            <div className="home-page-feature-item">
+              <FaShieldAlt className="home-page-feature-icon" />
               <div>
                 <h4>Secure Payment</h4>
                 <p>100% secure transactions</p>
               </div>
             </div>
-            <div className="feature-item">
-              <FaHeadset className="feature-icon" />
+            <div className="home-page-feature-item">
+              <FaHeadset className="home-page-feature-icon" />
               <div>
                 <h4>24/7 Support</h4>
                 <p>Dedicated support team</p>
@@ -89,20 +89,20 @@ const Home = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="categories-section">
-        <div className="container">
-          <div className="section-header">
+      <section className="home-page-categories-section">
+        <div className="home-page-container">
+          <div className="home-page-section-header">
             <h2>Shop by Category</h2>
-            <Link to="/products" className="view-all-link">View All →</Link>
+            <Link to="/products" className="home-page-view-all">View All </Link>
           </div>
-          <div className="categories-grid">
+          <div className="home-page-categories-grid">
             {categories.slice(0, 8).map(category => (
               <Link 
                 key={category._id} 
                 to={`/products?category=${category._id}`}
-                className="category-card"
+                className="home-page-category-card"
               >
-                <div className="category-icon">
+                <div className="home-page-category-icon">
                   {category.name.charAt(0)}
                 </div>
                 <h3>{category.name}</h3>
@@ -113,22 +113,22 @@ const Home = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="featured-section">
-        <div className="container">
-          <div className="section-header">
+      <section className="home-page-featured-section">
+        <div className="home-page-container">
+          <div className="home-page-section-header">
             <h2>Featured Products</h2>
-            <Link to="/products?featured=true" className="view-all-link">View All →</Link>
+            <Link to="/products?featured=true" className="home-page-view-all">View All </Link>
           </div>
           {loading ? (
-            <div className="loading-spinner">Loading products...</div>
+            <div className="home-page-loading">Loading products...</div>
           ) : featuredProducts.length > 0 ? (
-            <div className="products-grid">
+            <div className="home-page-products-grid">
               {featuredProducts.map(product => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>
           ) : (
-            <div className="no-products">
+            <div className="home-page-no-products">
               <p>No featured products available</p>
             </div>
           )}
@@ -136,18 +136,18 @@ const Home = () => {
       </section>
 
       {/* Promotional Banner */}
-      <section className="promo-banner">
-        <div className="container">
-          <div className="promo-content">
-            <div className="promo-text">
-              <span className="promo-badge">SPECIAL OFFER</span>
+      <section className="home-page-promo-banner">
+        <div className="home-page-container">
+          <div className="home-page-promo-content">
+            <div className="home-page-promo-text">
+              <span className="home-page-promo-badge">SPECIAL OFFER</span>
               <h2>Get 20% Off Your First Order!</h2>
               <p>Sign up today and enjoy exclusive discounts</p>
-              <Link to="/register" className="btn btn-light btn-lg">
+              <Link to="/register" className="home-page-btn home-page-btn-light">
                 Sign Up Now
               </Link>
             </div>
-            <div className="promo-image">
+            <div className="home-page-promo-image">
               <img src="https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=600" alt="Offer" />
             </div>
           </div>
@@ -155,14 +155,14 @@ const Home = () => {
       </section>
 
       {/* New Arrivals */}
-      <section className="arrivals-section">
-        <div className="container">
-          <div className="section-header">
+      <section className="home-page-arrivals-section">
+        <div className="home-page-container">
+          <div className="home-page-section-header">
             <h2>New Arrivals</h2>
-            <Link to="/products?sort=newest" className="view-all-link">View All →</Link>
+            <Link to="/products?sort=newest" className="home-page-view-all">View All </Link>
           </div>
           {!loading && featuredProducts.length > 0 && (
-            <div className="products-grid">
+            <div className="home-page-products-grid">
               {featuredProducts.slice(0, 4).map(product => (
                 <ProductCard key={product._id} product={product} />
               ))}
@@ -172,18 +172,18 @@ const Home = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="newsletter-section">
-        <div className="container">
-          <div className="newsletter-content">
+      <section className="home-page-newsletter-section">
+        <div className="home-page-container">
+          <div className="home-page-newsletter-content">
             <h2>Stay Updated with Latest Offers</h2>
             <p>Subscribe to our newsletter and never miss out on exclusive deals</p>
-            <div className="newsletter-form">
+            <div className="home-page-newsletter-form">
               <input 
                 type="email" 
                 placeholder="Enter your email address"
-                className="newsletter-input"
+                className="home-page-newsletter-input"
               />
-              <button className="btn btn-primary">Subscribe</button>
+              <button className="home-page-newsletter-btn">Subscribe</button>
             </div>
           </div>
         </div>
