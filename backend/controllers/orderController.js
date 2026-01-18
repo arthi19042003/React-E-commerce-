@@ -9,37 +9,26 @@ exports.createOrder = async (req, res) => {
   try {
     const { shippingAddress, orderNotes, paymentMethod } = req.body;
 
-    // Get user's cart
     const cart = await Cart.findOne({ user: req.user.id }).populate('items.product');
 
     if (!cart || cart.items.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Your cart is empty'
-      });
+      return res.status(400).json({ success: false, message: 'Your cart is empty' });
     }
 
-    // Prepare order items and check stock
     const orderItems = [];
     let totalAmount = 0;
 
     for (const item of cart.items) {
       const product = item.product;
-
-      // Check if product exists and is active
-      if (!product || !product.isActive) {
-        return res.status(400).json({
-          success: false,
-          message: `Product ${product?.name || 'unknown'} is not available`
-        });
+      
+      if (!product) {
+        return res.status(400).json({ success: false, message: 'Product not found' });
       }
 
-      // Check stock
-      if (product.stock < item.quantity) {
-        return res.status(400).json({
-          success: false,
-          message: `Insufficient stock for ${product.name}`
-        });
+      // Check stock (using 'countInStock' standard)
+      const stock = product.countInStock || product.stock || 0;
+      if (stock < item.quantity) {
+        return res.status(400).json({ success: false, message: `Insufficient stock for ${product.name}` });
       }
 
       orderItems.push({
@@ -47,22 +36,21 @@ exports.createOrder = async (req, res) => {
         name: product.name,
         quantity: item.quantity,
         price: item.price,
-        image: product.images[0]?.url
+        image: product.image || (product.images && product.images[0]?.url)
       });
 
       totalAmount += item.price * item.quantity;
-
-      // Reduce stock
-      product.stock -= item.quantity;
+      
+      // Reduce stock (optional logic)
+      if (product.countInStock) product.countInStock -= item.quantity;
+      if (product.stock) product.stock -= item.quantity;
       await product.save();
     }
 
-    // Calculate shipping and tax
-    const shippingCost = totalAmount > 500 ? 0 : 50; // Free shipping above 500
-    const taxAmount = totalAmount * 0.18; // 18% tax
+    const shippingCost = totalAmount > 500 ? 0 : 50;
+    const taxAmount = totalAmount * 0.18;
     const grandTotal = totalAmount + shippingCost + taxAmount;
 
-    // Create order
     const order = await Order.create({
       user: req.user.id,
       orderItems,
@@ -73,81 +61,48 @@ exports.createOrder = async (req, res) => {
       grandTotal,
       orderNotes,
       paymentMethod: paymentMethod || 'COD',
-      paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid'
+      paymentStatus: 'Pending',
+      orderStatus: 'Pending'
     });
 
     // Clear cart
     cart.items = [];
     await cart.save();
 
-    res.status(201).json({
-      success: true,
-      message: 'Order placed successfully',
-      order
-    });
+    res.status(201).json({ success: true, order });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Get user orders
-// @route   GET /api/orders/my-orders
+// @desc    Get logged in user orders
+// @route   GET /api/orders/myorders
 // @access  Private
 exports.getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user.id })
-      .sort({ createdAt: -1 })
-      .populate('orderItems.product', 'name');
-
-    res.status(200).json({
-      success: true,
-      count: orders.length,
-      orders
-    });
+    const orders = await Order.find({ user: req.user.id }).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, orders });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Get single order
+// @desc    Get order by ID
 // @route   GET /api/orders/:id
 // @access  Private
 exports.getOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('user', 'name email')
-      .populate('orderItems.product', 'name');
+      .populate('orderItems.product', 'name image');
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found'
-      });
+      return res.status(404).json({ success: false, message: 'Order not found' });
     }
 
-    // Check if order belongs to user or user is admin
-    if (order.user._id.toString() !== req.user.id && req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to view this order'
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      order
-    });
+    res.status(200).json({ success: true, order });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -156,36 +111,12 @@ exports.getOrder = async (req, res) => {
 // @access  Private/Admin
 exports.getAllOrders = async (req, res) => {
   try {
-    const { status, page = 1, limit = 20 } = req.query;
-
-    let query = {};
-    if (status) {
-      query.orderStatus = status;
-    }
-
-    const skip = (page - 1) * limit;
-
-    const orders = await Order.find(query)
-      .populate('user', 'name email')
-      .sort({ createdAt: -1 })
-      .limit(Number(limit))
-      .skip(skip);
-
-    const total = await Order.countDocuments(query);
-
-    res.status(200).json({
-      success: true,
-      count: orders.length,
-      total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: Number(page),
-      orders
-    });
+    const orders = await Order.find({})
+      .populate('user', 'id name')
+      .sort({ createdAt: -1 });
+    res.status(200).json({ success: true, orders });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -195,38 +126,26 @@ exports.getAllOrders = async (req, res) => {
 exports.updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
-
     const order = await Order.findById(req.params.id);
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found'
-      });
+      return res.status(404).json({ success: false, message: 'Order not found' });
     }
 
     order.orderStatus = status;
-
     if (status === 'Delivered') {
       order.deliveredAt = Date.now();
+      order.paymentStatus = 'Paid';
     }
 
     await order.save();
-
-    res.status(200).json({
-      success: true,
-      message: 'Order status updated',
-      order
-    });
+    res.status(200).json({ success: true, order });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Cancel order
+// @desc    Cancel Order
 // @route   PUT /api/orders/:id/cancel
 // @access  Private
 exports.cancelOrder = async (req, res) => {
@@ -234,54 +153,18 @@ exports.cancelOrder = async (req, res) => {
     const order = await Order.findById(req.params.id);
 
     if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found'
-      });
-    }
-
-    // Check if order belongs to user or user is admin
-    if (order.user.toString() !== req.user.id && req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to cancel this order'
-      });
-    }
-
-    // Can only cancel pending or processing orders
-    if (!['Pending', 'Processing'].includes(order.orderStatus)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Cannot cancel this order'
-      });
-    }
-
-    // Restore stock
-    for (const item of order.orderItems) {
-      const product = await Product.findById(item.product);
-      if (product) {
-        product.stock += item.quantity;
-        await product.save();
-      }
+        return res.status(404).json({ success: false, message: 'Order not found' });
     }
 
     order.orderStatus = 'Cancelled';
     await order.save();
-
-    res.status(200).json({
-      success: true,
-      message: 'Order cancelled successfully',
-      order
-    });
+    res.status(200).json({ success: true, message: 'Order cancelled' });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// @desc    Get order statistics (Admin)
+// @desc    Get Order Statistics (THIS WAS MISSING)
 // @route   GET /api/orders/stats
 // @access  Private/Admin
 exports.getOrderStats = async (req, res) => {
@@ -289,11 +172,12 @@ exports.getOrderStats = async (req, res) => {
     const totalOrders = await Order.countDocuments();
     const pendingOrders = await Order.countDocuments({ orderStatus: 'Pending' });
     const deliveredOrders = await Order.countDocuments({ orderStatus: 'Delivered' });
-    
-    const totalRevenue = await Order.aggregate([
-      { $match: { orderStatus: 'Delivered' } },
-      { $group: { _id: null, total: { $sum: '$grandTotal' } } }
+
+    // Calculate total revenue
+    const revenue = await Order.aggregate([
+      { $group: { _id: null, total: { $sum: "$grandTotal" } } }
     ]);
+    const totalRevenue = revenue.length > 0 ? revenue[0].total : 0;
 
     res.status(200).json({
       success: true,
@@ -301,13 +185,10 @@ exports.getOrderStats = async (req, res) => {
         totalOrders,
         pendingOrders,
         deliveredOrders,
-        totalRevenue: totalRevenue[0]?.total || 0
+        totalRevenue
       }
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };

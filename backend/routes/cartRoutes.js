@@ -3,16 +3,15 @@ const router = express.Router();
 const {
   getCart,
   addToCart,
-  updateCartItem,
-  removeFromCart,
-  clearCart
-} = require('../controllers/cartController'); // <--- FIXED PATH (added ..)
-const { protect } = require('../middleware/auth'); // <--- FIXED PATH (added ..)
+  removeFromCart
+} = require('../controllers/cartController');
+const { protect } = require('../middleware/auth');
 
-router.get('/', protect, getCart);
-router.post('/add', protect, addToCart);
-router.put('/update/:itemId', protect, updateCartItem);
-router.delete('/remove/:itemId', protect, removeFromCart);
-router.delete('/clear', protect, clearCart);
+router.route('/')
+  .get(protect, getCart)
+  .post(protect, addToCart);
+
+router.route('/:itemId')
+  .delete(protect, removeFromCart);
 
 module.exports = router;

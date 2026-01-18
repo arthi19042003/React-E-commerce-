@@ -1,19 +1,24 @@
-import { Navigate } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const AdminRoute = ({ children }) => {
-  const { isAuthenticated, isAdmin } = useContext(AuthContext);
+  // 1. Get the actual values provided by your AuthContext
+  const { user, loading } = useContext(AuthContext);
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  // 2. Wait for user data to load before redirecting
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  if (!isAdmin) {
-    return <Navigate to="/" replace />;
+  // 3. Check if user exists AND is an admin
+  // We check 'isAdmin' (boolean) OR 'role' (string) for safety
+  if (user && (user.isAdmin || user.role === 'admin')) {
+    return children;
   }
 
-  return children;
+  // 4. If not authorized, kick them out
+  return <Navigate to="/login" replace />;
 };
 
 export default AdminRoute;

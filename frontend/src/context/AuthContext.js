@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api'; // Import your configured API instance
 
 export const AuthContext = createContext();
 
@@ -8,10 +8,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  // Set axios default header
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       loadUser();
     } else {
       setLoading(false);
@@ -21,8 +19,10 @@ export const AuthProvider = ({ children }) => {
   // Load user
   const loadUser = async () => {
     try {
-      const res = await axios.get('/api/auth/me');
-      setUser(res.data.user);
+      // Changed to match standard backend route: /api/users/profile
+      const res = await api.get('/users/profile');
+      // Adjust based on your backend response structure
+      setUser(res.data.user || res.data);
     } catch (error) {
       console.error('Load user error:', error);
       logout();
@@ -34,14 +34,14 @@ export const AuthProvider = ({ children }) => {
   // Register
   const register = async (userData) => {
     try {
-      const res = await axios.post('/api/auth/register', userData);
+      // Changed to match backend: /api/users/register
+      const res = await api.post('/users/register', userData);
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
-      setUser(res.data.user);
+      setUser(res.data);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Registration failed';
-      console.error(message);
       return { success: false, message };
     }
   };
@@ -49,14 +49,14 @@ export const AuthProvider = ({ children }) => {
   // Login
   const login = async (credentials) => {
     try {
-      const res = await axios.post('/api/auth/login', credentials);
+      // Changed to match backend: /api/users/login
+      const res = await api.post('/users/login', credentials);
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
-      setUser(res.data.user);
+      setUser(res.data);
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed';
-      console.error(message);
       return { success: false, message };
     }
   };
@@ -64,22 +64,8 @@ export const AuthProvider = ({ children }) => {
   // Logout
   const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
     setToken(null);
     setUser(null);
-  };
-
-  // Update profile
-  const updateProfile = async (userData) => {
-    try {
-      const res = await axios.put('/api/auth/profile', userData);
-      setUser(res.data.user);
-      return { success: true };
-    } catch (error) {
-      const message = error.response?.data?.message || 'Update failed';
-      console.error(message);
-      return { success: false, message };
-    }
   };
 
   return (
@@ -90,9 +76,8 @@ export const AuthProvider = ({ children }) => {
         register,
         login,
         logout,
-        updateProfile,
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'admin'
+        isAdmin: user?.isAdmin === true || user?.role === 'admin'
       }}
     >
       {children}

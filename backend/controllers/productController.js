@@ -40,22 +40,22 @@ exports.getAllProducts = async (req, res) => {
     }
 
     // Sort options
-    let sortOption = {};
-    switch (sort) {
-      case 'price_low':
-        sortOption = { price: 1 };
-        break;
-      case 'price_high':
-        sortOption = { price: -1 };
-        break;
-      case 'newest':
-        sortOption = { createdAt: -1 };
-        break;
-      case 'rating':
-        sortOption = { 'ratings.average': -1 };
-        break;
-      default:
-        sortOption = { createdAt: -1 };
+    let sortOption = { createdAt: -1 }; // Default sort
+    if (sort) {
+      switch (sort) {
+        case 'price_low':
+          sortOption = { price: 1 };
+          break;
+        case 'price_high':
+          sortOption = { price: -1 };
+          break;
+        case 'newest':
+          sortOption = { createdAt: -1 };
+          break;
+        case 'rating':
+          sortOption = { 'ratings.average': -1 };
+          break;
+      }
     }
 
     // Pagination
@@ -80,9 +80,10 @@ exports.getAllProducts = async (req, res) => {
       products
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: 'Server Error: ' + error.message
     });
   }
 };
@@ -108,6 +109,11 @@ exports.getProduct = async (req, res) => {
       product
     });
   } catch (error) {
+    console.error(error);
+    // Handle invalid ID format
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
     res.status(500).json({
       success: false,
       message: error.message
@@ -120,8 +126,22 @@ exports.getProduct = async (req, res) => {
 // @access  Private/Admin
 exports.createProduct = async (req, res) => {
   try {
-    // Check if category exists
-    const categoryExists = await Category.findById(req.body.category);
+    // 1. Basic Validation
+    if (!req.body.name || !req.body.price || !req.body.category) {
+       return res.status(400).json({ 
+           success: false, 
+           message: 'Please provide name, price, and category' 
+       });
+    }
+
+    // 2. Check if category exists (Prevent CastError if ID is invalid)
+    let categoryExists;
+    try {
+        categoryExists = await Category.findById(req.body.category);
+    } catch (err) {
+        return res.status(400).json({ success: false, message: 'Invalid Category ID format' });
+    }
+
     if (!categoryExists) {
       return res.status(404).json({
         success: false,
@@ -129,6 +149,7 @@ exports.createProduct = async (req, res) => {
       });
     }
 
+    // 3. Create Product
     const product = await Product.create(req.body);
 
     res.status(201).json({
@@ -137,6 +158,7 @@ exports.createProduct = async (req, res) => {
       product
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: error.message
@@ -158,9 +180,15 @@ exports.updateProduct = async (req, res) => {
       });
     }
 
-    // Check if category exists
+    // Check if category exists if it is being updated
     if (req.body.category) {
-      const categoryExists = await Category.findById(req.body.category);
+      let categoryExists;
+      try {
+        categoryExists = await Category.findById(req.body.category);
+      } catch (err) {
+         return res.status(400).json({ success: false, message: 'Invalid Category ID format' });
+      }
+
       if (!categoryExists) {
         return res.status(404).json({
           success: false,
@@ -181,6 +209,7 @@ exports.updateProduct = async (req, res) => {
       product
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: error.message
@@ -202,6 +231,7 @@ exports.deleteProduct = async (req, res) => {
       });
     }
 
+    // Use deleteOne() for modern Mongoose compatibility
     await product.deleteOne();
 
     res.status(200).json({
@@ -209,6 +239,7 @@ exports.deleteProduct = async (req, res) => {
       message: 'Product deleted successfully'
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: error.message
@@ -231,6 +262,7 @@ exports.getFeaturedProducts = async (req, res) => {
       products
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: error.message
@@ -255,7 +287,7 @@ exports.addReview = async (req, res) => {
 
     // Check if user already reviewed
     const alreadyReviewed = product.reviews.find(
-      review => review.user.toString() === req.user.id
+      review => review.user.toString() === req.user.id.toString()
     );
 
     if (alreadyReviewed) {
@@ -265,15 +297,24 @@ exports.addReview = async (req, res) => {
       });
     }
 
-    // Add review
-    product.reviews.push({
+    // Add new review
+    const review = {
       user: req.user.id,
+      name: req.user.name, // Usually good to save user name with review
       rating: Number(rating),
       comment
-    });
+    };
 
-    // Calculate new average rating
-    product.calculateAverageRating();
+    product.reviews.push(review);
+
+    // Calculate average rating manually to prevent crashes if method is missing
+    product.numReviews = product.reviews.length;
+    
+    // Safety check: ensure ratings object exists
+    if (!product.ratings) product.ratings = {};
+    
+    product.ratings.average = 
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
 
     await product.save();
 
@@ -282,6 +323,7 @@ exports.addReview = async (req, res) => {
       message: 'Review added successfully'
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: error.message

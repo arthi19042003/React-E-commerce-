@@ -1,107 +1,52 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../services/api'; // <--- USE THIS IMPORT, NOT AXIOS
 import { AuthContext } from './AuthContext';
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const { isAuthenticated } = useContext(AuthContext);
+  const [cart, setCart] = useState({ items: [] });
+  const { user } = useContext(AuthContext);
 
-  // Load cart
   useEffect(() => {
-    if (isAuthenticated) {
-      loadCart();
+    if (user) {
+      fetchCart();
+    } else {
+      setCart({ items: [] });
     }
-  }, [isAuthenticated]);
+  }, [user]);
 
-  const loadCart = async () => {
+  const fetchCart = async () => {
     try {
-      setLoading(true);
-      const res = await axios.get('/api/cart');
-      setCart(res.data.cart);
+      // This now uses the correct baseURL (port 5000) and token
+      const { data } = await api.get('/cart'); 
+      setCart(data.cart || { items: [] });
     } catch (error) {
-      console.error('Load cart error:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error fetching cart:', error);
     }
   };
 
-  // Add to cart
-  const addToCart = async (productId, quantity = 1) => {
-    if (!isAuthenticated) {
-      alert('Please login to add items to cart');
-      return { success: false };
-    }
-
+  const addToCart = async (productId, quantity) => {
     try {
-      const res = await axios.post('/api/cart/add', { productId, quantity });
-      setCart(res.data.cart);
-      return { success: true };
+      const { data } = await api.post('/cart', { productId, quantity });
+      setCart(data.cart);
+      alert('Added to cart!');
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to add to cart';
-      console.error(message);
-      return { success: false, message };
+      alert(error.response?.data?.message || 'Error adding to cart');
     }
   };
 
-  // Update cart item
-  const updateCartItem = async (itemId, quantity) => {
-    try {
-      const res = await axios.put(`/api/cart/update/${itemId}`, { quantity });
-      setCart(res.data.cart);
-      return { success: true };
-    } catch (error) {
-      const message = error.response?.data?.message || 'Failed to update cart';
-      console.error(message);
-      return { success: false, message };
-    }
-  };
-
-  // Remove from cart
   const removeFromCart = async (itemId) => {
     try {
-      const res = await axios.delete(`/api/cart/remove/${itemId}`);
-      setCart(res.data.cart);
-      return { success: true };
+      const { data } = await api.delete(`/cart/${itemId}`);
+      setCart(data.cart);
     } catch (error) {
-      const message = error.response?.data?.message || 'Failed to remove item';
-      console.error(message);
-      return { success: false, message };
+      console.error('Error removing item:', error);
     }
   };
-
-  // Clear cart
-  const clearCart = async () => {
-    try {
-      const res = await axios.delete('/api/cart/clear');
-      setCart(res.data.cart);
-      return { success: true };
-    } catch (error) {
-      const message = error.response?.data?.message || 'Failed to clear cart';
-      console.error(message);
-      return { success: false, message };
-    }
-  };
-
-  const cartItemsCount = cart?.items?.length || 0;
-  const cartTotal = cart?.totalAmount || 0;
 
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        loading,
-        cartItemsCount,
-        cartTotal,
-        addToCart,
-        updateCartItem,
-        removeFromCart,
-        clearCart,
-        loadCart
-      }}
-    >
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
       {children}
     </CartContext.Provider>
   );

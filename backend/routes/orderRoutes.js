@@ -1,22 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const {
-  createOrder,
-  getMyOrders,
-  getOrder,
-  getAllOrders,
+const { 
+  createOrder, 
+  getOrder, 
+  getAllOrders, 
   updateOrderStatus,
   cancelOrder,
-  getOrderStats
-} = require('../controllers/orderController'); // <--- FIXED PATH (added ..)
-const { protect, authorize } = require('../middleware/auth'); // <--- FIXED PATH (added ..)
+  getOrderStats, // Make sure this is imported
+  getMyOrders 
+} = require('../controllers/orderController');
+const { protect, admin } = require('../middleware/auth');
 
-router.post('/', protect, createOrder);
-router.get('/my-orders', protect, getMyOrders);
-router.get('/stats', protect, authorize('admin'), getOrderStats);
-router.get('/', protect, authorize('admin'), getAllOrders);
-router.get('/:id', protect, getOrder);
-router.put('/:id/status', protect, authorize('admin'), updateOrderStatus);
-router.put('/:id/cancel', protect, cancelOrder);
+// 1. General Routes (Must be at the top)
+router.route('/').post(protect, createOrder).get(protect, admin, getAllOrders);
+router.route('/myorders').get(protect, getMyOrders);
+
+// 2. STATS ROUTE (MUST BE BEFORE /:id) <--- THIS IS YOUR FIX
+router.route('/stats').get(protect, admin, getOrderStats);
+
+// 3. Specific ID Routes (Must be at the bottom)
+router.route('/:id').get(protect, getOrder);
+router.route('/:id/status').put(protect, admin, updateOrderStatus);
+router.route('/:id/cancel').put(protect, cancelOrder);
 
 module.exports = router;

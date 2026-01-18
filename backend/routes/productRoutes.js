@@ -8,15 +8,22 @@ const {
   deleteProduct,
   getFeaturedProducts,
   addReview
-} = require('../controllers/productController'); // <--- FIXED PATH HERE
-const { protect, authorize } = require('../middleware/auth'); // <--- Ensure this also has '../'
+} = require('../controllers/productController');
 
+// Importing 'admin' here means it must be exported in auth.js
+const { protect, admin } = require('../middleware/auth'); 
+
+// Public Routes
 router.get('/', getAllProducts);
 router.get('/featured', getFeaturedProducts);
 router.get('/:id', getProduct);
-router.post('/', protect, authorize('admin'), createProduct);
-router.put('/:id', protect, authorize('admin'), updateProduct);
-router.delete('/:id', protect, authorize('admin'), deleteProduct);
+
+// Admin Routes
+router.post('/', protect, admin, createProduct);
+router.put('/:id', protect, admin, updateProduct);
+router.delete('/:id', protect, admin, deleteProduct);
+
+// Protected User Route
 router.post('/:id/reviews', protect, addReview);
 
 module.exports = router;

@@ -1,18 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const {
-  getAllCategories,
-  getCategory,
+  getCategories,
   createCategory,
-  updateCategory,
   deleteCategory
-} = require('../controllers/categoryController'); // <--- FIXED PATH (added ..)
-const { protect, authorize } = require('../middleware/auth'); // <--- FIXED PATH (added ..)
+} = require('../controllers/categoryController');
+const { protect, admin } = require('../middleware/auth');
 
-router.get('/', getAllCategories);
-router.get('/:id', getCategory);
-router.post('/', protect, authorize('admin'), createCategory);
-router.put('/:id', protect, authorize('admin'), updateCategory);
-router.delete('/:id', protect, authorize('admin'), deleteCategory);
+router.route('/')
+  .get(getCategories)
+  .post(protect, admin, createCategory);
+
+router.route('/:id')
+  .delete(protect, admin, deleteCategory);
 
 module.exports = router;

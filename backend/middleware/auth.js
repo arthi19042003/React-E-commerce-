@@ -1,43 +1,52 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// 1. Protect Middleware (Verifies Token)
 exports.protect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  // Make sure token exists
+  if (!token) {
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Not authorized to access this route' 
+    });
+  }
+
   try {
-    let token;
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
+    // Get user from the token
+    req.user = await User.findById(decoded.id).select('-password');
+
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: 'No user found with this id' });
     }
 
-    if (!token) {
-      return res.status(401).json({ success: false, message: 'Not authorized, no token' });
-    }
-
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).select('-password');
-
-      if (!req.user) {
-        return res.status(401).json({ success: false, message: 'User not found' });
-      }
-      
-      next();
-    } catch (error) {
-      return res.status(401).json({ success: false, message: 'Not authorized, token failed' });
-    }
+    next();
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Server auth error' });
+    console.error(error);
+    return res.status(401).json({ success: false, message: 'Not authorized, token failed' });
   }
 };
 
-exports.authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({
-        success: false,
-        message: `User role ${req.user ? req.user.role : 'unknown'} is not authorized to access this route`
-      });
-    }
+// 2. Admin Middleware (Checks if user is admin)
+exports.admin = (req, res, next) => {
+  // Checks if user exists AND if their role is 'admin' OR if isAdmin is true
+  if (req.user && (req.user.role === 'admin' || req.user.isAdmin === true)) {
     next();
-  };
+  } else {
+    return res.status(403).json({ 
+      success: false, 
+      message: 'Not authorized as an admin' 
+    });
+  }
 };
