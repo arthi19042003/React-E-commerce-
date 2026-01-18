@@ -1,55 +1,47 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userSchema = mongoose.Schema(
-  {
+const userSchema = mongoose.Schema({
     name: {
-      type: String,
-      required: true,
+        type: String,
+        required: true
     },
     email: {
-      type: String,
-      required: true,
-      unique: true,
+        type: String,
+        required: true,
+        unique: true
     },
     password: {
-      type: String,
-      required: true,
-    },
-    // New fields for your updated Middleware
-    role: {
         type: String,
-        default: 'user',
-        enum: ['user', 'admin'] 
+        required: true
     },
-    isActive: {
-        type: Boolean,
-        default: true
-    },
-    // Keep this for backward compatibility if needed, but 'role' replaces it
     isAdmin: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
-    next();
-  }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+        type: Boolean,
+        required: true,
+        default: false
+    }
+}, {
+    timestamps: true
 });
 
-const User = mongoose.model('User', userSchema);
+// 1. Check if entered password matches hashed password
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
 
-module.exports = User;
+// 2. Encrypt password before saving
+userSchema.pre('save', async function (next) {
+    // If password is not modified, skip hashing
+    if (!this.isModified('password')) {
+        return next();
+    }
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    
+    // CRITICAL FIX: You must call next() here to finish the process!
+    next();
+});
+
+module.exports = mongoose.model('User', userSchema);

@@ -1,20 +1,27 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import './Login.css'; // Importing the unique CSS
+import './Login.css'; 
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
+  // Get the login function from context
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const result = await login({ email, password });
+    // FIXED: Pass email and password as separate arguments, NOT as an object
+    const result = await login(email, password);
+    
     if (result.success) {
       navigate('/');
+    } else {
+        // Optional: Alert the user if login fails using the result message
+        alert(result.message); 
     }
   };
 

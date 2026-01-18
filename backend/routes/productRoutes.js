@@ -7,23 +7,29 @@ const {
   updateProduct,
   deleteProduct,
   getFeaturedProducts,
+  getTopProducts, // Ensures the "Port 5000" error is fixed
   addReview
 } = require('../controllers/productController');
 
-// Importing 'admin' here means it must be exported in auth.js
+// Check your auth middleware file name! 
+// Usually it is 'authMiddleware.js' or 'auth.js'. 
+// Adjust the require path below if your file is named differently.
 const { protect, admin } = require('../middleware/auth'); 
 
-// Public Routes
+// --- PUBLIC ROUTES ---
 router.get('/', getAllProducts);
 router.get('/featured', getFeaturedProducts);
-router.get('/:id', getProduct);
+router.get('/top', getTopProducts); // Must be before /:id
 
-// Admin Routes
+// --- PROTECTED / ADMIN ROUTES ---
 router.post('/', protect, admin, createProduct);
 router.put('/:id', protect, admin, updateProduct);
 router.delete('/:id', protect, admin, deleteProduct);
 
-// Protected User Route
+// --- REVIEWS ---
 router.post('/:id/reviews', protect, addReview);
+
+// --- GET SINGLE PRODUCT (MUST BE LAST) ---
+router.get('/:id', getProduct);
 
 module.exports = router;

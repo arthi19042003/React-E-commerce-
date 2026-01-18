@@ -6,25 +6,11 @@ const Category = require('../models/Category');
 // @access  Public
 exports.getAllProducts = async (req, res) => {
   try {
-    const { 
-      category, 
-      search, 
-      minPrice, 
-      maxPrice, 
-      sort, 
-      page = 1, 
-      limit = 12 
-    } = req.query;
-
-    // Build query
+    const { category, search, minPrice, maxPrice, sort, page = 1, limit = 12 } = req.query;
     let query = { isActive: true };
 
-    // Filter by category
-    if (category) {
-      query.category = category;
-    }
+    if (category) query.category = category;
 
-    // Search by name or description
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -32,43 +18,29 @@ exports.getAllProducts = async (req, res) => {
       ];
     }
 
-    // Filter by price range
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = Number(minPrice);
       if (maxPrice) query.price.$lte = Number(maxPrice);
     }
 
-    // Sort options
-    let sortOption = { createdAt: -1 }; // Default sort
+    let sortOption = { createdAt: -1 };
     if (sort) {
       switch (sort) {
-        case 'price_low':
-          sortOption = { price: 1 };
-          break;
-        case 'price_high':
-          sortOption = { price: -1 };
-          break;
-        case 'newest':
-          sortOption = { createdAt: -1 };
-          break;
-        case 'rating':
-          sortOption = { 'ratings.average': -1 };
-          break;
+        case 'price_low': sortOption = { price: 1 }; break;
+        case 'price_high': sortOption = { price: -1 }; break;
+        case 'newest': sortOption = { createdAt: -1 }; break;
+        case 'rating': sortOption = { 'ratings.average': -1 }; break;
       }
     }
 
-    // Pagination
     const skip = (page - 1) * limit;
-
-    // Execute query
     const products = await Product.find(query)
       .populate('category', 'name')
       .sort(sortOption)
       .limit(Number(limit))
       .skip(skip);
 
-    // Get total count
     const total = await Product.countDocuments(query);
 
     res.status(200).json({
@@ -80,11 +52,7 @@ exports.getAllProducts = async (req, res) => {
       products
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: 'Server Error: ' + error.message
-    });
+    res.status(500).json({ success: false, message: 'Server Error: ' + error.message });
   }
 };
 
@@ -98,26 +66,14 @@ exports.getProduct = async (req, res) => {
       .populate('reviews.user', 'name');
 
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Product not found'
-      });
+      return res.status(404).json({ success: false, message: 'Product not found' });
     }
-
-    res.status(200).json({
-      success: true,
-      product
-    });
+    res.status(200).json({ success: true, product });
   } catch (error) {
-    console.error(error);
-    // Handle invalid ID format
     if (error.kind === 'ObjectId') {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -126,15 +82,10 @@ exports.getProduct = async (req, res) => {
 // @access  Private/Admin
 exports.createProduct = async (req, res) => {
   try {
-    // 1. Basic Validation
     if (!req.body.name || !req.body.price || !req.body.category) {
-       return res.status(400).json({ 
-           success: false, 
-           message: 'Please provide name, price, and category' 
-       });
+       return res.status(400).json({ success: false, message: 'Please provide name, price, and category' });
     }
 
-    // 2. Check if category exists (Prevent CastError if ID is invalid)
     let categoryExists;
     try {
         categoryExists = await Category.findById(req.body.category);
@@ -143,26 +94,13 @@ exports.createProduct = async (req, res) => {
     }
 
     if (!categoryExists) {
-      return res.status(404).json({
-        success: false,
-        message: 'Category not found'
-      });
+      return res.status(404).json({ success: false, message: 'Category not found' });
     }
 
-    // 3. Create Product
     const product = await Product.create(req.body);
-
-    res.status(201).json({
-      success: true,
-      message: 'Product created successfully',
-      product
-    });
+    res.status(201).json({ success: true, message: 'Product created successfully', product });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -172,15 +110,10 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     let product = await Product.findById(req.params.id);
-
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Product not found'
-      });
+      return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    // Check if category exists if it is being updated
     if (req.body.category) {
       let categoryExists;
       try {
@@ -188,32 +121,15 @@ exports.updateProduct = async (req, res) => {
       } catch (err) {
          return res.status(400).json({ success: false, message: 'Invalid Category ID format' });
       }
-
       if (!categoryExists) {
-        return res.status(404).json({
-          success: false,
-          message: 'Category not found'
-        });
+        return res.status(404).json({ success: false, message: 'Category not found' });
       }
     }
 
-    product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: 'Product updated successfully',
-      product
-    });
+    product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    res.status(200).json({ success: true, message: 'Product updated successfully', product });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -223,27 +139,13 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Product not found'
-      });
+      return res.status(404).json({ success: false, message: 'Product not found' });
     }
-
-    // Use deleteOne() for modern Mongoose compatibility
     await product.deleteOne();
-
-    res.status(200).json({
-      success: true,
-      message: 'Product deleted successfully'
-    });
+    res.status(200).json({ success: true, message: 'Product deleted successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -252,22 +154,23 @@ exports.deleteProduct = async (req, res) => {
 // @access  Public
 exports.getFeaturedProducts = async (req, res) => {
   try {
-    const products = await Product.find({ isFeatured: true, isActive: true })
-      .populate('category', 'name')
-      .limit(8);
-
-    res.status(200).json({
-      success: true,
-      count: products.length,
-      products
-    });
+    const products = await Product.find({ isFeatured: true, isActive: true }).populate('category', 'name').limit(8);
+    res.status(200).json({ success: true, count: products.length, products });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
+};
+
+// @desc    Get Top Rated products
+// @route   GET /api/products/top
+// @access  Public
+exports.getTopProducts = async (req, res) => {
+    try {
+        const products = await Product.find({ isActive: true }).sort({ 'ratings.average': -1 }).limit(3);
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 };
 
 // @desc    Add product review
@@ -279,54 +182,32 @@ exports.addReview = async (req, res) => {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Product not found'
-      });
+      return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    // Check if user already reviewed
     const alreadyReviewed = product.reviews.find(
       review => review.user.toString() === req.user.id.toString()
     );
 
     if (alreadyReviewed) {
-      return res.status(400).json({
-        success: false,
-        message: 'You have already reviewed this product'
-      });
+      return res.status(400).json({ success: false, message: 'You have already reviewed this product' });
     }
 
-    // Add new review
     const review = {
       user: req.user.id,
-      name: req.user.name, // Usually good to save user name with review
+      name: req.user.name,
       rating: Number(rating),
       comment
     };
 
     product.reviews.push(review);
-
-    // Calculate average rating manually to prevent crashes if method is missing
     product.numReviews = product.reviews.length;
-    
-    // Safety check: ensure ratings object exists
     if (!product.ratings) product.ratings = {};
-    
-    product.ratings.average = 
-      product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+    product.ratings.average = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
 
     await product.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'Review added successfully'
-    });
+    res.status(201).json({ success: true, message: 'Review added successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };

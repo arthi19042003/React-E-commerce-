@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { getFeaturedProducts, getCategories } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import { FaShippingFast, FaShieldAlt, FaHeadset, FaMoneyBillWave } from 'react-icons/fa';
-import './Home.css'; // Importing the unique CSS
+import './Home.css'; 
 
 const Home = () => {
+  // Initialize with empty arrays
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,10 +21,33 @@ const Home = () => {
         getFeaturedProducts(),
         getCategories()
       ]);
-      setFeaturedProducts(productsRes.data.products);
-      setCategories(categoriesRes.data.categories);
+
+      // --- CRITICAL FIX START ---
+      // We check if .data exists, and if .products exists.
+      // If NOT, we fallback to an empty array [] to prevent the crash.
+      
+      // Handle Products Response
+      if (productsRes.data && productsRes.data.products) {
+          setFeaturedProducts(productsRes.data.products);
+      } else {
+          setFeaturedProducts([]); 
+      }
+
+      // Handle Categories Response
+      if (categoriesRes.data && categoriesRes.data.categories) {
+          setCategories(categoriesRes.data.categories);
+      } else if (Array.isArray(categoriesRes.data)) {
+          setCategories(categoriesRes.data);
+      } else {
+          setCategories([]);
+      }
+      // --- CRITICAL FIX END ---
+
     } catch (error) {
       console.error('Error loading data:', error);
+      // Ensure we don't leave it undefined on error
+      setFeaturedProducts([]);
+      setCategories([]);
     } finally {
       setLoading(false);
     }
@@ -96,18 +120,23 @@ const Home = () => {
             <Link to="/products" className="home-page-view-all">View All </Link>
           </div>
           <div className="home-page-categories-grid">
-            {categories.slice(0, 8).map(category => (
-              <Link 
-                key={category._id} 
-                to={`/products?category=${category._id}`}
-                className="home-page-category-card"
-              >
-                <div className="home-page-category-icon">
-                  {category.name.charAt(0)}
-                </div>
-                <h3>{category.name}</h3>
-              </Link>
-            ))}
+            {/* Safe Check: Use ?.length to prevent crash */}
+            {categories?.length > 0 ? (
+                categories.slice(0, 8).map(category => (
+                <Link 
+                    key={category._id} 
+                    to={`/products?category=${category._id}`}
+                    className="home-page-category-card"
+                >
+                    <div className="home-page-category-icon">
+                    {category.name.charAt(0)}
+                    </div>
+                    <h3>{category.name}</h3>
+                </Link>
+                ))
+            ) : (
+                <p>No categories found.</p>
+            )}
           </div>
         </div>
       </section>
@@ -121,16 +150,19 @@ const Home = () => {
           </div>
           {loading ? (
             <div className="home-page-loading">Loading products...</div>
-          ) : featuredProducts.length > 0 ? (
-            <div className="home-page-products-grid">
-              {featuredProducts.map(product => (
-                <ProductCard key={product._id} product={product} />
-              ))}
-            </div>
           ) : (
-            <div className="home-page-no-products">
-              <p>No featured products available</p>
-            </div>
+             /* Safe Check: Use ?.length to prevent crash */
+             featuredProducts?.length > 0 ? (
+                <div className="home-page-products-grid">
+                {featuredProducts.map(product => (
+                    <ProductCard key={product._id} product={product} />
+                ))}
+                </div>
+            ) : (
+                <div className="home-page-no-products">
+                <p>No featured products available</p>
+                </div>
+            )
           )}
         </div>
       </section>
@@ -161,7 +193,8 @@ const Home = () => {
             <h2>New Arrivals</h2>
             <Link to="/products?sort=newest" className="home-page-view-all">View All </Link>
           </div>
-          {!loading && featuredProducts.length > 0 && (
+          {/* Safe Check: Use ?.length to prevent crash */}
+          {!loading && featuredProducts?.length > 0 && (
             <div className="home-page-products-grid">
               {featuredProducts.slice(0, 4).map(product => (
                 <ProductCard key={product._id} product={product} />
